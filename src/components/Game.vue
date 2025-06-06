@@ -229,7 +229,7 @@ const humanPlayersSorted = computed(() =>
         <p v-if="props.players[currentPlayerIndex].name !== robotName">
           <button @click="submitTurn" class="validate">Valider ce tour</button>
         </p>
-        <p><button @click="undoTurn" class="undo-button">←</button></p>
+        <p><button @click="undoTurn" class="undo-button">&#8592;</button></p>
       </div>
 
       <div v-else>
