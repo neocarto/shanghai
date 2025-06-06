@@ -153,7 +153,7 @@ h1 {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background: transparent;  /* <-- ici */
+  background: transparent;  
 }
 
 .add-all-players-link {

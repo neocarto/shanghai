@@ -14,7 +14,7 @@ const darts = ref([0, 0, 0]);
 const robotName = 'Number One';
 const robotAvatar = 'https://cdn-icons-png.flaticon.com/512/4712/4712027.png';
 
-// Ajout initial du robot si activé au démarrage
+
 onMounted(() => {
   const robotIndex = props.players.findIndex(p => p.name === robotName);
   if (props.players.length > 1 && robotIndex === -1) {
@@ -27,7 +27,6 @@ onMounted(() => {
   }
 });
 
-// Réagit aux changements de l’état de la case à cocher
 watch(
   () => props.players.length,
   (newLength) => {
@@ -46,10 +45,10 @@ watch(
       }
     }
   },
-  { immediate: true } // pour forcer l’exécution au démarrage
+  { immediate: true } 
 );
 
-// Initialisation des scores
+// Init scores
 props.players.forEach(player => {
   if (!player.scores) player.scores = [];
   if (player.totalScore === undefined) player.totalScore = 0;
@@ -242,7 +241,7 @@ const humanPlayersSorted = computed(() =>
   class="final-score-item"
 >
   <div class="final-player-name-above">
-    <!-- Attribuer les médailles uniquement aux humains -->
+
     <template v-if="player.name !== robotName">
       <span v-if="humanPlayersSorted[0]?.name === player.name">🥇</span>
       <span v-else-if="humanPlayersSorted[1]?.name === player.name">🥈</span>
