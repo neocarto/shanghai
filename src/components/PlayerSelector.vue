@@ -61,8 +61,6 @@ function random() {
 }
 
 
-
-
 </script>
 
 <template>

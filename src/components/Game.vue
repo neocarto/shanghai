@@ -1,37 +1,68 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch, nextTick, onMounted } from 'vue';
 
-const nb = 20
-
+const nb = 20;
 
 const props = defineProps({
   players: Array
 });
 
-// États du jeu
 const currentRound = ref(1);
 const currentPlayerIndex = ref(0);
 const darts = ref([0, 0, 0]);
 
-// Initialisation des scores
-props.players.forEach(player => {
-  if (!player.scores) {
-    player.scores = [];
-  }
-  if (player.totalScore === undefined) {
-    player.totalScore = 0;
+const robotName = 'Number One';
+const robotAvatar = 'https://cdn-icons-png.flaticon.com/512/4712/4712027.png';
+
+// Ajout initial du robot si activé au démarrage
+onMounted(() => {
+  const robotIndex = props.players.findIndex(p => p.name === robotName);
+  if (props.players.length > 1 && robotIndex === -1) {
+    props.players.push({
+      name: robotName,
+      avatar: robotAvatar,
+      scores: [],
+      totalScore: 0
+    });
   }
 });
 
-// Fonctions utilitaires
+// Réagit aux changements de l’état de la case à cocher
+watch(
+  () => props.players.length,
+  (newLength) => {
+    const robotIndex = props.players.findIndex(p => p.name === robotName);
+    if (newLength > 1 && robotIndex === -1) {
+      props.players.push({
+        name: robotName,
+        avatar: robotAvatar,
+        scores: [],
+        totalScore: 0
+      });
+    } else if (newLength <= 1 && robotIndex !== -1) {
+      props.players.splice(robotIndex, 1);
+      if (currentPlayerIndex.value >= props.players.length) {
+        currentPlayerIndex.value = 0;
+      }
+    }
+  },
+  { immediate: true } // pour forcer l’exécution au démarrage
+);
+
+// Initialisation des scores
+props.players.forEach(player => {
+  if (!player.scores) player.scores = [];
+  if (player.totalScore === undefined) player.totalScore = 0;
+});
+
 function stats(player) {
   const flat = player.scores.flat();
   const total = flat.length;
   const miss = flat.filter(x => x === 0).length;
   const hits = flat.filter(x => x !== 0).length;
-  const hitsF1 =  player.scores.map((d) => d[0]).filter((d) => d !== 0).length
-  const hitsF2 =  player.scores.map((d) => d[1]).filter((d) => d !== 0).length
-  const hitsF3 =  player.scores.map((d) => d[2]).filter((d) => d !== 0).length
+  const hitsF1 =  player.scores.map(d => d[0]).filter(d => d !== 0).length;
+  const hitsF2 =  player.scores.map(d => d[1]).filter(d => d !== 0).length;
+  const hitsF3 =  player.scores.map(d => d[2]).filter(d => d !== 0).length;
   const single = flat.filter(x => x === 1).length;
   const double = flat.filter(x => x === 2).length;
   const triple = flat.filter(x => x === 3).length;
@@ -39,7 +70,7 @@ function stats(player) {
   const tt = player.scores.filter(row => row.filter(x => x === 3).length === 2).length;
   const ddd = player.scores.filter(row => row.filter(x => x === 2).length === 3).length;
   const dd = player.scores.filter(row => row.filter(x => x === 2).length === 2).length;
-  const shangai = player.scores.filter((row) => {
+  const shangai = player.scores.filter(row => {
     const set = new Set(row);
     return set.has(1) && set.has(2) && set.has(3);
   }).length;
@@ -55,8 +86,26 @@ const currentTurnScore = computed(() => {
   return darts.value.reduce((sum, multiplier) => sum + multiplier * target, 0);
 });
 
+function getBestPlayer() {
+  const humans = props.players.filter(p => p.name !== robotName);
+  if (humans.length === 0) return null;
+  return humans.reduce((best, p) => (p.totalScore > best.totalScore ? p : best), humans[0]);
+}
+
+function getLastThrowOf(player) {
+  if (!player || player.scores.length === 0) return [0, 0, 0];
+  return player.scores[player.scores.length - 1];
+}
+
 function submitTurn() {
   const player = props.players[currentPlayerIndex.value];
+
+  if (player.name === robotName) {
+    const bestPlayer = getBestPlayer();
+    const lastThrow = getLastThrowOf(bestPlayer);
+    darts.value = [...lastThrow];
+  }
+
   player.scores.push([...darts.value]);
   player.totalScore += currentTurnScore.value;
   darts.value = [0, 0, 0];
@@ -77,9 +126,9 @@ function undoTurn() {
 
   if (playerIndex === 0 && round > 1) {
     playerIndex = props.players.length - 1;
-    round = round - 1;
+    round -= 1;
   } else {
-    playerIndex = playerIndex - 1;
+    playerIndex -= 1;
   }
 
   currentPlayerIndex.value = playerIndex;
@@ -105,76 +154,104 @@ const gameOver = computed(() => currentRound.value > nb);
 const sortedPlayers = computed(() =>
   [...props.players].sort((a, b) => b.totalScore - a.totalScore)
 );
+
+watch(currentPlayerIndex, async (newIndex) => {
+  const player = props.players[newIndex];
+  if (player.name === robotName && !gameOver.value){
+    await nextTick();
+    submitTurn();
+  }
+});
+
+const humanPlayersSorted = computed(() => 
+  props.players
+    .filter(p => p.name !== robotName)
+    .sort((a, b) => b.totalScore - a.totalScore)
+);
 </script>
 
+
 <template>
-  <div class="container">
-    <div v-if="!gameOver">
-      <h2>Visez le {{ currentRound }}</h2>
-      <div class="score-recap">
-        <small>
-          <span v-for="player in props.players" :key="player.name" style="margin-right: 15px;">
-            {{ player.name }} : {{ player.totalScore }}
-          </span>
-        </small>
-      </div>
-      <hr />
 
-      <!-- Ligne avatars fixes -->
-      <div class="avatar-lineup">
-        <img
-          v-for="(p, index) in props.players"
-          :key="p.name"
-          :src="p.avatar"
-          :alt="p.name"
-          class="avatar"
-          :class="{ current: index === currentPlayerIndex }"
-        />
-      </div>
+<div>
 
-      <h3>{{ props.players[currentPlayerIndex].name }}</h3>
-      <p style="font-weight: normal; color: gray; margin-top: 4px;">
-        Score avant de jouer : {{ props.players[currentPlayerIndex].totalScore }}
-      </p>
-
-      <div
-        v-for="(dart, index) in darts"
-        :key="index"
-        class="dart-controls"
-        style="display: flex; align-items: center; gap: 6px;"
-      >
-        <div class="buttons">
-          <button @click="setDart(index, 0)" :class="{ active: dart === 0 }">Miss</button>
-          <button @click="setDart(index, 1)" :class="{ active: dart === 1 }">Single</button>
-          <button @click="setDart(index, 2)" :class="{ active: dart === 2 }">Double</button>
-          <button @click="setDart(index, 3)" :class="{ active: dart === 3 }">Triple</button>
+   <div class="container">
+      <div v-if="!gameOver">
+        <h2>Visez le {{ currentRound }}</h2>
+        <div class="score-recap">
+          <small>
+            <span v-for="player in props.players" :key="player.name" style="margin-right: 15px;">
+              {{ player.name }} : {{ player.totalScore }}
+            </span>
+          </small>
         </div>
+        <hr />
+
+        <div class="avatar-lineup">
+          <img
+            v-for="(p, index) in props.players"
+            :key="p.name"
+            :src="p.avatar"
+            :alt="p.name"
+            class="avatar"
+            :class="{ current: index === currentPlayerIndex }"
+          />
+        </div>
+
+
+        <h3>{{ props.players[currentPlayerIndex].name }}</h3>
+        <p style="font-weight: normal; color: gray; margin-top: 4px;">
+          Score avant de jouer : {{ props.players[currentPlayerIndex].totalScore }}
+        </p>
+
+
+        <div
+          v-for="(dart, index) in darts"
+          :key="index"
+          class="dart-controls"
+          style="display: flex; align-items: center; gap: 6px;"
+        >
+          <div v-if="props.players[currentPlayerIndex].name !== robotName" class="buttons">
+            <button @click="setDart(index, 0)" :class="{ active: dart === 0 }">Miss</button>
+            <button @click="setDart(index, 1)" :class="{ active: dart === 1 }">Single</button>
+            <button @click="setDart(index, 2)" :class="{ active: dart === 2 }">Double</button>
+            <button @click="setDart(index, 3)" :class="{ active: dart === 3 }">Triple</button>
+          </div>
+          <div v-else style="color: gray; font-style: italic;">
+            Le robot joue automatiquement.
+          </div>
+        </div>
+
+        <p style="font-weight: normal; color: gray; margin-top: 4px;">+{{ currentTurnScore }}</p>
+        <p style="margin-top: 12px; font-weight: bold;">
+          Score : {{ currentTurnScore + props.players[currentPlayerIndex].totalScore }}
+        </p>
+
+        <p v-if="props.players[currentPlayerIndex].name !== robotName">
+          <button @click="submitTurn" class="validate">Valider ce tour</button>
+        </p>
+        <p><button @click="undoTurn" class="undo-button">←</button></p>
       </div>
 
-      <p style="font-weight: normal; color: gray; margin-top: 4px;">+{{ currentTurnScore }}</p>
-      <p style="margin-top: 12px; font-weight: bold;">
-        Score : {{ currentTurnScore + props.players[currentPlayerIndex].totalScore }}
-      </p>
-
-      <p><button @click="submitTurn" class="validate">Valider ce tour</button></p>
-      <p><button @click="undoTurn" class="undo-button">←</button></p>
-    </div>
-
-    <div v-else>
-      <h2>Partie terminée</h2>
-      <ul class="final-scores">
-        <li
+      <div v-else>
+        <h2>Partie terminée</h2>
+        <ul class="final-scores">
+          <li
   v-for="(player, index) in sortedPlayers"
   :key="player.name"
   class="final-score-item"
 >
   <div class="final-player-name-above">
-    <span v-if="index === 0">🥇</span>
-    <span v-else-if="index === 1">🥈</span>
-    <span v-else-if="index === 2">🥉</span>
+    <!-- Attribuer les médailles uniquement aux humains -->
+    <template v-if="player.name !== robotName">
+      <span v-if="humanPlayersSorted[0]?.name === player.name">🥇</span>
+      <span v-else-if="humanPlayersSorted[1]?.name === player.name">🥈</span>
+      <span v-else-if="humanPlayersSorted[2]?.name === player.name">🥉</span>
+    </template>
     {{ player.name }}
   </div>
   <img :src="player.avatar" alt="avatar" class="final-avatar-large" />
+ 
   <div class="final-player-info">
     <div class="final-player-stats">
       <span class="stat-badge">Hits : {{ stats(player).hits }}/{{ stats(player).total }}</span>
@@ -195,10 +272,14 @@ const sortedPlayers = computed(() =>
   <span class="final-player-score">{{ player.totalScore }} pts</span>
 </li>
       </ul>
-      <button @click="replay" class="replay-button">Rejouer</button>
+        <p><button @click="replay">Rejouer</button></p>
+      </div>
     </div>
   </div>
+
 </template>
+
+
 
 <style scoped>
 .container {
