@@ -1,6 +1,9 @@
 <script setup>
 import { ref, computed } from 'vue';
 
+const nb = 20
+
+
 const props = defineProps({
   players: Array
 });
@@ -26,6 +29,9 @@ function stats(player) {
   const total = flat.length;
   const miss = flat.filter(x => x === 0).length;
   const hits = flat.filter(x => x !== 0).length;
+  const hitsF1 =  player.scores.map((d) => d[0]).filter((d) => d !== 0).length
+  const hitsF2 =  player.scores.map((d) => d[1]).filter((d) => d !== 0).length
+  const hitsF3 =  player.scores.map((d) => d[2]).filter((d) => d !== 0).length
   const single = flat.filter(x => x === 1).length;
   const double = flat.filter(x => x === 2).length;
   const triple = flat.filter(x => x === 3).length;
@@ -37,7 +43,7 @@ function stats(player) {
     const set = new Set(row);
     return set.has(1) && set.has(2) && set.has(3);
   }).length;
-  return { total, hits, miss, single, double, triple, shangai, ttt, ddd, tt, dd };
+  return { total, hits, hitsF1, hitsF2, hitsF3, miss, single, double, triple, shangai, ttt, ddd, tt, dd };
 }
 
 function setDart(index, value) {
@@ -94,7 +100,7 @@ function replay() {
   window.location.reload();
 }
 
-const gameOver = computed(() => currentRound.value > 3);
+const gameOver = computed(() => currentRound.value > nb);
 
 const sortedPlayers = computed(() =>
   [...props.players].sort((a, b) => b.totalScore - a.totalScore)
@@ -172,6 +178,9 @@ const sortedPlayers = computed(() =>
   <div class="final-player-info">
     <div class="final-player-stats">
       <span class="stat-badge">Hits : {{ stats(player).hits }}/{{ stats(player).total }}</span>
+      <span class="stat-badge">Hits (F1) : {{ stats(player).hitsF1 }}/{{ stats(player).total/3 }}</span>
+      <span class="stat-badge">Hits (F2) : {{ stats(player).hitsF2 }}/{{ stats(player).total/3 }}</span>
+      <span class="stat-badge">Hits (F3) : {{ stats(player).hitsF3 }}/{{ stats(player).total/3 }}</span>
       <span class="stat-badge">Miss : {{ stats(player).miss }}</span>
       <span class="stat-badge">Single : {{ stats(player).single }}</span>
       <span class="stat-badge">Double : {{ stats(player).double }}</span>
