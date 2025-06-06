@@ -107,9 +107,9 @@ function random() {
   </div>
   <div class="player-name">{{ player }}</div>
   <div class="player-actions">
-    <button @click="moveUpPlayer(player)">🡰</button>
+    <button @click="moveUpPlayer(player)">←</button>
     <button @click="deletePlayer(player)">❌</button>
-    <button @click="moveDownPlayer(player)">🡲</button>
+    <button @click="moveDownPlayer(player)">→ </button>
   </div>
 </li>
 </ul>
