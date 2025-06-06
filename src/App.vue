@@ -6,12 +6,11 @@ import Game from './components/Game.vue';
 const predefinedPlayers = [
   { name: "Matt", avatar: "https://avatars.githubusercontent.com/u/12172162" },
   { name: "Darts Vador", avatar: "https://avatars.githubusercontent.com/u/8111373" },
-  {name:"Cramomille", avatar:"/img/default.jpg"},
+  { name: "Cramomille", avatar: import.meta.env.BASE_URL + "img/default.jpg" },
   { name: "Feu d'artifice", avatar: "https://avatars.githubusercontent.com/u/3041254" },
-  {name:"Ro", avatar:"https://avatars.githubusercontent.com/u/17565776"},
-  {name:"Louis", avatar:"/img/van gerwen.png"},
-  {name:"Angelo", avatar:"/img/default.jpg"},
-
+  { name: "Ro", avatar: "https://avatars.githubusercontent.com/u/17565776" },
+  { name: "Louis", avatar: import.meta.env.BASE_URL + "img/van gerwen.png" },
+  { name: "Angelo", avatar: import.meta.env.BASE_URL + "img/default.jpg" },
 ];
 
 const gameStarted = ref(false);
@@ -26,7 +25,7 @@ function startGame(players) {
 // Liste complète des joueurs sélectionnés avec leur avatar (d'après predefinedPlayers)
 const selectedPlayersWithData = computed(() => 
   selectedPlayers.value.map(name => 
-    predefinedPlayers.find(p => p.name === name) || { name, avatar: "/img/default.jpg" }
+    predefinedPlayers.find(p => p.name === name) || { name, avatar: import.meta.env.BASE_URL + "img/default.jpg" }
   )
 );
 </script>
