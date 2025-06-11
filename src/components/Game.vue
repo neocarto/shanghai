@@ -90,14 +90,13 @@ function submitTurn() {
   const player = props.players[currentPlayerIndex.value];
 
   if (player.name === robotName) {
-    // Simulate a robot turn
-    // const LastThrowOf =  props.players.map(d => d.scores[d.scores.length - 1]).filter(d => d!== undefined)
-    // const scores = LastThrowOf.map(d => (d[0]  + d[1] + d[2]))
-    // const indexMax = scores.indexOf(Math.max(...scores));
-    // const bestThrowOf = LastThrowOf[indexMax]
-    // darts.value = [...bestThrowOf];
-    // console.log()
-  }
+    // Simulate a robot 
+    const LastThrowOf =  props.players.filter(d => d.name !== robotName).map(d => d.scores[d.scores.length - 1])
+    const scores = LastThrowOf.map(d => (d[0]  + d[1] + d[2]))
+    const indexMax = scores.indexOf(Math.max(...scores));
+    const bestThrowOf = LastThrowOf[indexMax] 
+    darts.value = [...bestThrowOf];
+   }
 
   player.scores.push([...darts.value]);
   player.totalScore += currentTurnScore.value;
