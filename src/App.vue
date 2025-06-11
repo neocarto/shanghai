@@ -5,13 +5,15 @@ import Game from './components/Game.vue';
 
 const predefinedPlayers = [
   { name: "Matt", avatar: "https://avatars.githubusercontent.com/u/12172162" },
-  { name: "Darts Vador", avatar: "https://avatars.githubusercontent.com/u/8111373" },
+  { name: "Darts Vador", avatar: import.meta.env.BASE_URL + "img/nico.png" },
   { name: "Cramomille", avatar: import.meta.env.BASE_URL + "img/default.jpg" },
   { name: "Feu d'artifice", avatar: "https://avatars.githubusercontent.com/u/3041254" },
   { name: "Ro", avatar: import.meta.env.BASE_URL + "img/ro.jpg" },
   { name: "Louis", avatar: import.meta.env.BASE_URL + "img/van gerwen.png" },
   { name: "Angelo", avatar: import.meta.env.BASE_URL + "img/default.jpg" },
 ];
+
+
 
 const gameStarted = ref(false);
 const selectedPlayers = ref([]);
