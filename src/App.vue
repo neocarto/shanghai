@@ -8,7 +8,7 @@ const predefinedPlayers = [
   { name: "Darts Vador", avatar: "https://avatars.githubusercontent.com/u/8111373" },
   { name: "Cramomille", avatar: import.meta.env.BASE_URL + "img/default.jpg" },
   { name: "Feu d'artifice", avatar: "https://avatars.githubusercontent.com/u/3041254" },
-  { name: "Ro", avatar: "https://avatars.githubusercontent.com/u/17565776" },
+  { name: "Ro", avatar: import.meta.env.BASE_URL + "img/ro.jpg" },
   { name: "Louis", avatar: import.meta.env.BASE_URL + "img/van gerwen.png" },
   { name: "Angelo", avatar: import.meta.env.BASE_URL + "img/default.jpg" },
 ];
