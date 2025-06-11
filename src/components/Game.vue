@@ -272,6 +272,7 @@ const humanPlayersSorted = computed(() =>
 </li>
       </ul>
         <p><button @click="replay">Rejouer</button></p>
+        <p><button @click="replay">Sauvegarder la partie (todo)</button></p>
       </div>
     </div>
   </div>
