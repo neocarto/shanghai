@@ -14,19 +14,6 @@ const darts = ref([0, 0, 0]);
 const robotName = 'Number One';
 const robotAvatar = 'https://cdn-icons-png.flaticon.com/512/4712/4712027.png';
 
-
-// onMounted(() => {
-//   const robotIndex = props.players.findIndex(p => p.name === robotName);
-//   if (props.players.length > 1 && robotIndex === -1) {
-//     props.players.push({
-//       name: robotName,
-//       avatar: robotAvatar,
-//       scores: [],
-//       totalScore: 0
-//     });
-//   }
-// });
-
 watch(
   () => props.players.length,
   (newLength) => {
