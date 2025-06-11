@@ -15,17 +15,17 @@ const robotName = 'Number One';
 const robotAvatar = 'https://cdn-icons-png.flaticon.com/512/4712/4712027.png';
 
 
-onMounted(() => {
-  const robotIndex = props.players.findIndex(p => p.name === robotName);
-  if (props.players.length > 1 && robotIndex === -1) {
-    props.players.push({
-      name: robotName,
-      avatar: robotAvatar,
-      scores: [],
-      totalScore: 0
-    });
-  }
-});
+// onMounted(() => {
+//   const robotIndex = props.players.findIndex(p => p.name === robotName);
+//   if (props.players.length > 1 && robotIndex === -1) {
+//     props.players.push({
+//       name: robotName,
+//       avatar: robotAvatar,
+//       scores: [],
+//       totalScore: 0
+//     });
+//   }
+// });
 
 watch(
   () => props.players.length,
@@ -85,24 +85,17 @@ const currentTurnScore = computed(() => {
   return darts.value.reduce((sum, multiplier) => sum + multiplier * target, 0);
 });
 
-function getBestPlayer() {
-  const humans = props.players.filter(p => p.name !== robotName);
-  if (humans.length === 0) return null;
-  return humans.reduce((best, p) => (p.totalScore > best.totalScore ? p : best), humans[0]);
-}
-
-function getLastThrowOf(player) {
-  if (!player || player.scores.length === 0) return [0, 0, 0];
-  return player.scores[player.scores.length - 1];
-}
 
 function submitTurn() {
   const player = props.players[currentPlayerIndex.value];
 
   if (player.name === robotName) {
-    const bestPlayer = getBestPlayer();
-    const lastThrow = getLastThrowOf(bestPlayer);
-    darts.value = [...lastThrow];
+    // Simulate a robot turn
+    const LastThrowOf =  props.players.map(d => d.scores[d.scores.length - 1]).filter(d => d!== undefined)
+    const scores = LastThrowOf.map(d => (d[0]  + d[1] + d[2]))
+    const indexMax = scores.indexOf(Math.max(...scores));
+    const bestThrowOf = LastThrowOf[indexMax]
+    darts.value = [...bestThrowOf];
   }
 
   player.scores.push([...darts.value]);
@@ -215,9 +208,6 @@ const humanPlayersSorted = computed(() =>
             <button @click="setDart(index, 1)" :class="{ active: dart === 1 }">Single</button>
             <button @click="setDart(index, 2)" :class="{ active: dart === 2 }">Double</button>
             <button @click="setDart(index, 3)" :class="{ active: dart === 3 }">Triple</button>
-          </div>
-          <div v-else style="color: gray; font-style: italic;">
-            Le robot joue automatiquement.
           </div>
         </div>
 
