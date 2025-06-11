@@ -68,7 +68,7 @@ function random() {
 
 <h1>Shangaï 🎯</h1>
 <p style="font-size: 0.8em; max-width: 100%; overflow-wrap: break-word; white-space: pre-wrap; text-align: center; margin: 0 auto; font-style: italic; padding: 0 20px;">
-"Au lancer comme dans la vie, la précision vient de la constance. Chaque fléchette compte." — Von Garden
+« I want to win. It’s as simple as that. » — Michael van Gerwen
 </p>
 
 <form @submit.prevent="addPlayer(newPlayer)">
