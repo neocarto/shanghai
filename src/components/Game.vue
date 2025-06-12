@@ -190,7 +190,8 @@ const humanPlayersSorted = computed(() =>
         <h2 class="round-circle">{{ currentRound }}</h2>
 
 
-
+        <h1>{{ props.players[currentPlayerIndex].name }}</h1>
+        <hr/>
 <div class="avatar-lineup">
   <div
     v-for="(player, index) in props.players"
@@ -219,11 +220,6 @@ const humanPlayersSorted = computed(() =>
 </div>
 <hr/>
 
-
-        <h3>{{ props.players[currentPlayerIndex].name }}</h3>
-        <!-- <p style="font-weight: normal; color: gray; margin-top: 4px;">
-          Score avant de jouer : {{ props.players[currentPlayerIndex].totalScore }}
-        </p> -->
 
 
         <div
