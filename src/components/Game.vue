@@ -195,9 +195,9 @@ const humanPlayersSorted = computed(() =>
 
 
         <h3>{{ props.players[currentPlayerIndex].name }}</h3>
-        <p style="font-weight: normal; color: gray; margin-top: 4px;">
+        <!-- <p style="font-weight: normal; color: gray; margin-top: 4px;">
           Score avant de jouer : {{ props.players[currentPlayerIndex].totalScore }}
-        </p>
+        </p> -->
 
 
         <div
@@ -276,6 +276,16 @@ const humanPlayersSorted = computed(() =>
 
 
 <style scoped>
+
+html, body {
+  overscroll-behavior-y: contain;
+  overflow: hidden;
+  height:100%;
+  margin:0;
+  padding:0;
+}
+
+
 .container {
   display: flex;
   flex-direction: column;
