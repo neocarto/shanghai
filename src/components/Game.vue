@@ -10,9 +10,10 @@ const props = defineProps({
 const currentRound = ref(1);
 const currentPlayerIndex = ref(0);
 const darts = ref([0, 0, 0]);
-
 const robotName = 'Number One';
 const robotAvatar = 'https://cdn-icons-png.flaticon.com/512/4712/4712027.png';
+let topScore = 0
+
 
 watch(
   () => props.players.length,
@@ -40,6 +41,7 @@ props.players.forEach(player => {
   if (!player.scores) player.scores = [];
   if (player.totalScore === undefined) player.totalScore = 0;
 });
+
 
 function stats(player) {
   const flat = player.scores.flat();
@@ -95,6 +97,9 @@ function submitTurn() {
     currentPlayerIndex.value = 0;
     currentRound.value++;
   }
+
+  topScore = Math.max(...props.players.filter(d => d.name !== robotName).map(player => player.totalScore))
+
 }
 
 function undoTurn() {
@@ -156,26 +161,37 @@ const humanPlayersSorted = computed(() =>
 
    <div class="container">
       <div v-if="!gameOver">
-        <h2>Visez le {{ currentRound }}</h2>
-        <div class="score-recap">
-          <small>
-            <span v-for="player in props.players" :key="player.name" style="margin-right: 15px;">
-              {{ player.name }} : {{ player.totalScore }}
-            </span>
-          </small>
-        </div>
-        <hr />
+        <h2 class="round-circle">{{ currentRound }}</h2>
 
-        <div class="avatar-lineup">
-          <img
-            v-for="(p, index) in props.players"
-            :key="p.name"
-            :src="p.avatar"
-            :alt="p.name"
-            class="avatar"
-            :class="{ current: index === currentPlayerIndex }"
-          />
-        </div>
+
+
+<div class="avatar-lineup">
+  <div
+    v-for="(player, index) in props.players"
+    :key="player.name"
+    class="avatar-wrapper"
+  >
+    <img
+      :src="player.avatar"
+      :alt="player.name"
+      class="avatar"
+      :class="{ current: index === currentPlayerIndex }"
+    />
+    <div
+      :class="[
+        'score-badge',
+        { 
+          'bestscore-badge': player.totalScore === topScore 
+                          && player.name !== robotName 
+                          && topScore !== 0
+        }
+      ]"
+    >
+      {{ player.totalScore }}
+    </div>
+  </div>
+</div>
+<hr/>
 
 
         <h3>{{ props.players[currentPlayerIndex].name }}</h3>
@@ -227,6 +243,7 @@ const humanPlayersSorted = computed(() =>
     {{ player.name }}
   </div>
   <img :src="player.avatar" alt="avatar" class="final-avatar-large" />
+
  
   <div class="final-player-info">
     <div class="final-player-stats">
@@ -283,7 +300,7 @@ const humanPlayersSorted = computed(() =>
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  filter: grayscale(80%);
+  filter: grayscale(30%);
   opacity: 0.6;
   transition: all 0.3s ease;
 }
@@ -291,10 +308,26 @@ const humanPlayersSorted = computed(() =>
 .avatar-lineup img.avatar.current {
   filter: none;
   opacity: 1;
-  border: 3px solid #007BFF;
+  border: 3px solid rgba(233, 30, 99);
   transform: scale(1.2);
   z-index: 1;
 }
+
+.round-circle {
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  border-radius: 50%;
+  background-color: rgba(233, 30, 99);
+  color: "white";
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin: 10px auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+
 
 .dart-controls {
   margin: 0.5rem 0;
@@ -303,6 +336,8 @@ const humanPlayersSorted = computed(() =>
   align-items: center;
   gap: 6px;
 }
+
+
 
 .buttons {
   display: flex;
@@ -322,6 +357,7 @@ const humanPlayersSorted = computed(() =>
     gap: 6px;
   }
 }
+
 
 button.active {
   background-color: var(--primary, #007BFF);
@@ -350,16 +386,20 @@ button.active {
 }
 
 .score-recap {
-  margin-top: 8px;
-  color: gray;
-  font-size: 0.8rem;
-  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  margin-bottom: 4px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
 }
+
+
 
 .final-score-item {
   display: flex;
-  flex-direction: column; /* passage en colonne */
-  align-items: center;    /* centrage horizontal */
+  flex-direction: column; 
+  align-items: center;  
   gap: 8px;
   margin-bottom: 24px;
   padding-bottom: 12px;
@@ -428,6 +468,40 @@ button.active {
   box-shadow: 0 0 6px rgba(233, 30, 99, 0.4);
 }
 
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-right: 12px; 
+}
+
+.avatar {
+  width: 60px;     
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.score-badge {
+  position: absolute;
+  bottom: -10px; 
+  right: -10px;    
+  background-color: #2196f3;
+  color: white;
+  padding: 4px 9px;
+  border-radius: 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  user-select: none;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+.bestscore-badge {
+  background-color: #e91e63;
+  font-weight: bold;
+}
+
+
 .final-player-score {
   font-style: italic;
   font-weight: bold;
@@ -448,4 +522,17 @@ button.active {
 .replay-button:hover {
   background-color: #0056b3;
 }
+
+.final-scores {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;       /* centre horizontalement la liste */
+  max-width: 600px;     /* limite la largeur pour un meilleur centrage */
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* centre les éléments enfants horizontalement */
+  gap: 24px;            /* espace entre les joueurs */
+}
+
+
 </style>
