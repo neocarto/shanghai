@@ -1,6 +1,32 @@
 <script setup>
-import { ref, computed, watch, nextTick, onMounted } from 'vue';
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
 
+
+// Avoid scroll on mobile
+let startY = 0;
+
+function onTouchStart(e) {
+  startY = e.touches[0].clientY;
+}
+
+function onTouchMove(e) {
+  const currentY = e.touches[0].clientY;
+  if (window.scrollY === 0 && currentY > startY) {
+    e.preventDefault();
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('touchstart', onTouchStart, { passive: false });
+  window.addEventListener('touchmove', onTouchMove, { passive: false });
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('touchstart', onTouchStart);
+  window.removeEventListener('touchmove', onTouchMove);
+});
+
+// Play
 const nb = 20;
 
 const props = defineProps({
