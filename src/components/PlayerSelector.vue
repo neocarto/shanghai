@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref,defineEmits } from 'vue';
 
 const props = defineProps({
   predefinedPlayers: Array
@@ -60,6 +60,24 @@ function random() {
   }
 }
 
+function goFullScreen() {
+  const el = document.documentElement; // plein écran sur tout le document
+  if (el.requestFullscreen) {
+    el.requestFullscreen();
+  } else if (el.mozRequestFullScreen) { // Firefox
+    el.mozRequestFullScreen();
+  } else if (el.webkitRequestFullscreen) { // Chrome, Safari, Opera
+    el.webkitRequestFullscreen();
+  } else if (el.msRequestFullscreen) { // IE/Edge
+    el.msRequestFullscreen();
+  }
+}
+
+function startGame() {
+  goFullScreen();
+  emit('start-game', players.value);
+}
+
 
 </script>
 
@@ -113,7 +131,7 @@ function random() {
 </ul>
 <div class="action-buttons">
   <button v-if="players.length >= 2" @click="random()">Ordre aléatoire</button>
-  <button v-if="players.length >= 1" @click="emit('start-game', players)">JOUER</button>
+  <button v-if="players.length >= 1" @click="startGame">JOUER</button>
 </div>
 <br/>
 
