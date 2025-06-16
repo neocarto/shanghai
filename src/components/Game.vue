@@ -205,17 +205,18 @@ const humanPlayersSorted = computed(() =>
       :class="{ current: index === currentPlayerIndex }"
     />
     <div
-      :class="[
-        'score-badge',
-        { 
-          'bestscore-badge': player.totalScore === topScore 
-                          && player.name !== robotName 
-                          && topScore !== 0
-        }
-      ]"
-    >
-      {{ player.totalScore }}
-    </div>
+  :class="[
+    'score-badge',
+    { 
+      'bestscore-badge': player.totalScore === topScore 
+                         && player.name !== robotName 
+                         && topScore !== 0,
+      'score-robot': player.name === robotName
+    }
+  ]"
+>
+  {{ player.totalScore }}
+</div>
   </div>
 </div>
 <hr/>
@@ -327,8 +328,8 @@ html, body {
 }
 
 .avatar-lineup img.avatar {
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
@@ -351,14 +352,13 @@ html, body {
   line-height: 100px;
   border-radius: 50%;
   background-color: rgba(233, 30, 99);
-  color: "white";
+  color: white;
   text-align: center;
-  font-size: 2.4rem;
+  font-size: 2.9rem;
   font-weight: bold;
   margin: 10px auto;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
-
 
 
 .dart-controls {
@@ -466,7 +466,6 @@ button.active {
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  /* ajoute un léger margin entre nom et avatar si besoin */
   margin-bottom: 8px;
 }
 
@@ -519,6 +518,21 @@ button.active {
   right: -10px;    
   background-color: #2196f3;
   color: white;
+  padding: 4px 9px;
+  border-radius: 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  user-select: none;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+.score-robot {
+  position: absolute;
+  bottom: -10px; 
+  right: -10px;    
+  background-color: #CCC;
+  color: #2196f3;
   padding: 4px 9px;
   border-radius: 14px;
   font-size: 0.75rem;
