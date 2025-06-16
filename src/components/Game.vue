@@ -370,8 +370,12 @@ html, body {
 }
 
 .dart-button {
+
   height: 80px;
-  min-height: 60px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 
