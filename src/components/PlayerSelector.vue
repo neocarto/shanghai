@@ -1,8 +1,9 @@
 <script setup>
-import { ref,defineEmits } from 'vue';
+import { ref,defineEmits, onMounted } from 'vue';
 
 const props = defineProps({
-  predefinedPlayers: Array
+  predefinedPlayers: Array,
+  role: String
 });
 
 const emit = defineEmits(['start-game']);
@@ -78,6 +79,12 @@ function startGame() {
   emit('start-game', players.value);
 }
 
+onMounted(() => {
+  if (props.role === 'admin') {
+    addAllPlayers();
+  }
+});
+
 
 </script>
 
@@ -93,24 +100,13 @@ function startGame() {
     <input
       type="text"
       v-model="newPlayer"
-      list="playerOptions"
       placeholder="Ajouter un joueur"
       @change="onInputChange"
     />
-    <datalist id="playerOptions">
-      <option v-for="player in predefinedPlayersNames" :key="player" :value="player" />
-    </datalist>
+
     <button :disabled="newPlayer.length==0" >Ajouter</button>
   </form>
 
-  <button
-  class="add-all-players-link"
-  @click="addAllPlayers"
-  :disabled="predefinedPlayersNames.length === 0"
-  type="button"
->
-  Ajouter tous les joueurs prédéfinis
-</button>
 
   <ul class="players-grid">
     <li v-for="player in players" :key="player" class="player-card">

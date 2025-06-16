@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
-
+import { supabase } from '../supabase.js';
 
 // Avoid scroll on mobile
 let startY = 0;
@@ -30,8 +30,11 @@ onBeforeUnmount(() => {
 const nb = 20;
 
 const props = defineProps({
-  players: Array
+  players: Array,
+  role: String
 });
+
+
 
 const currentRound = ref(1);
 const currentPlayerIndex = ref(0);
@@ -157,6 +160,11 @@ function undoTurn() {
 
 function replay() {
   window.location.reload();
+
+}
+
+function saveResults() {
+console.log("Sauvegarde des résultats", props);
 }
 
 const gameOver = computed(() => currentRound.value > nb);
@@ -289,7 +297,9 @@ const humanPlayersSorted = computed(() =>
 </li>
       </ul>
         <p><button @click="replay">Rejouer</button></p>
-        <p><button @click="replay">Sauvegarder la partie (todo)</button></p>
+        <p v-if="role === 'admin'">
+    <button @click="saveResults">Sauvegarder les résultats</button>
+  </p>
       </div>
     </div>
   </div>
@@ -370,8 +380,7 @@ html, body {
 }
 
 .dart-button {
-
-  height: 80px;
+  height: 70px;
   font-size: 1.2rem;
   display: flex;
   align-items: center;

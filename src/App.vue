@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue';
 import PlayerSelector from './components/PlayerSelector.vue';
 import Game from './components/Game.vue';
+import Login from './components/Login.vue';
 
 const predefinedPlayers = [
   { name: "Matt", avatar: "https://avatars.githubusercontent.com/u/12172162" },
@@ -13,8 +14,7 @@ const predefinedPlayers = [
   { name: "Angelo", avatar: import.meta.env.BASE_URL + "img/default.jpg" },
 ];
 
-
-
+const user = ref(null);  // utilisateur connecté
 const gameStarted = ref(false);
 const selectedPlayers = ref([]);
 
@@ -22,6 +22,11 @@ const selectedPlayers = ref([]);
 function startGame(players) {
   selectedPlayers.value = players;
   gameStarted.value = true;
+}
+
+// Gestion du login
+function handleLogin(data) {
+  user.value = data;
 }
 
 // Liste complète des joueurs sélectionnés avec leur avatar (d'après predefinedPlayers)
@@ -33,12 +38,19 @@ const selectedPlayersWithData = computed(() =>
 </script>
 
 <template>
-  <!-- On passe predefinedPlayers à PlayerSelector -->
-  <PlayerSelector 
-    v-if="!gameStarted" 
-    :predefinedPlayers="predefinedPlayers"
-    @start-game="startGame" 
-  />
-  <!-- On passe la liste enrichie à Game -->
-  <Game v-else :players="selectedPlayersWithData" />
+  <div>
+    <Login v-if="!user" @login="handleLogin" />
+    
+    <div v-else>
+      <!-- <p style="text-align:center">Connecté en tant que <strong>{{ user.name }}</strong></p> -->
+
+      <PlayerSelector 
+  v-if="!gameStarted" 
+  :predefinedPlayers="predefinedPlayers"
+  :role="user.role"
+  @start-game="startGame" 
+/>
+      <Game v-else :players="selectedPlayersWithData" :role="user.role" />
+    </div>
+  </div>
 </template>
