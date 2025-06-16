@@ -230,10 +230,10 @@ const humanPlayersSorted = computed(() =>
           style="display: flex; align-items: center; gap: 6px;"
         >
           <div v-if="props.players[currentPlayerIndex].name !== robotName" class="buttons">
-            <button @click="setDart(index, 0)" :class="{ active: dart === 0 }">Miss</button>
-            <button @click="setDart(index, 1)" :class="{ active: dart === 1 }">Single</button>
-            <button @click="setDart(index, 2)" :class="{ active: dart === 2 }">Double</button>
-            <button @click="setDart(index, 3)" :class="{ active: dart === 3 }">Triple</button>
+            <button class="dart-button" @click="setDart(index, 0)" :class="{ active: dart === 0 }">Miss</button>
+            <button class="dart-button" @click="setDart(index, 1)" :class="{ active: dart === 1 }">Single</button>
+            <button class="dart-button" @click="setDart(index, 2)" :class="{ active: dart === 2 }">Double</button>
+            <button class="dart-button" @click="setDart(index, 3)" :class="{ active: dart === 3 }">Triple</button>
           </div>
         </div>
 
@@ -367,6 +367,11 @@ html, body {
   justify-content: center; 
   align-items: center;
   gap: 6px;
+}
+
+.dart-button {
+  height: 80px;
+  min-height: 60px;
 }
 
 
