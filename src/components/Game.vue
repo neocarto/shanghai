@@ -99,6 +99,11 @@ function stats(player) {
 
 function setDart(index, value) {
   darts.value[index] = value;
+  if (navigator.vibrate) {
+    navigator.vibrate(100);
+    
+  }
+
 }
 
 const currentTurnScore = computed(() => {
