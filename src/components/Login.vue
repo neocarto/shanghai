@@ -1,22 +1,24 @@
 <template>
-    <div class="login-container">
-      <div class="login-box">
+  <div class="login-container">
+    <div class="login-box">
+      <form @submit.prevent="loginAdmin">
         <input
           v-model="password"
           type="password"
           placeholder="Mot de passe"
+          autocomplete="current-password"
         />
-        <button @click="loginAdmin" :disabled="loading">
+        <button type="submit" :disabled="loading">
           {{ loading ? "Connexion..." : "Se connecter" }}
         </button>
-        <a @click.prevent="continueAsVisitor" href="#" class="visitor-link">
-          Continuer en tant que visiteur
-        </a>
-        <p v-if="error" class="error">{{ error }}</p>
-      </div>
+      </form>
+      <a @click.prevent="continueAsVisitor" href="#" class="visitor-link">
+        Continuer en tant que visiteur
+      </a>
+      <p v-if="error" class="error">{{ error }}</p>
     </div>
-  </template>
-  
+  </div>
+</template>
   <script setup>
   import { ref } from 'vue';
   import { loginWithPasswordOnly } from '../supabase.js';
@@ -51,7 +53,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #f5f5f5;
+
     padding: 16px;
   }
   

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
-import { supabase } from '../supabase.js';
+import GameStats from './GameStats.vue'; // ajuste le chemin si besoin
 
 // Avoid scroll on mobile
 let startY = 0;
@@ -73,6 +73,9 @@ props.players.forEach(player => {
 
 
 function stats(player) {
+// Record
+  console.log(player.name);
+  // Display
   const flat = player.scores.flat();
   const total = flat.length;
   const miss = flat.filter(x => x === 0).length;
@@ -137,35 +140,64 @@ function undoTurn() {
   let playerIndex = currentPlayerIndex.value;
   let round = currentRound.value;
 
-  if (playerIndex === 0 && round > 1) {
-    playerIndex = props.players.length - 1;
+  // Trouver le joueur humain précédent (non robot)
+  function getPreviousHumanPlayerIndex(index) {
+    const totalPlayers = props.players.length;
+    for (let i = 1; i <= totalPlayers; i++) {
+      const newIndex = (index - i + totalPlayers) % totalPlayers;
+      if (props.players[newIndex].name !== robotName) {
+        return newIndex;
+      }
+    }
+    return index;
+  }
+
+  // Trouver l'index du robot (s'il existe)
+  const robotIndex = props.players.findIndex(p => p.name === robotName);
+
+  // Flag pour savoir si on recule au tour précédent
+  let backToPreviousRound = false;
+
+  if (playerIndex === 0) {
+    if (round === 1) return; // début de la partie, pas de retour possible
+
     round -= 1;
+    playerIndex = getPreviousHumanPlayerIndex(props.players.length);
+    backToPreviousRound = true;  // on revient au tour précédent
   } else {
-    playerIndex -= 1;
+    playerIndex = getPreviousHumanPlayerIndex(playerIndex);
   }
 
   currentPlayerIndex.value = playerIndex;
   currentRound.value = round;
 
+  // Annuler le dernier score du joueur humain
   const player = props.players[playerIndex];
   const lastTurn = player.scores.pop();
-  if (!lastTurn) return;
+  if (lastTurn) {
+    const target = round;
+    const lastScore = lastTurn.reduce((sum, multiplier) => sum + multiplier * target, 0);
+    player.totalScore -= lastScore;
+  }
 
-  const target = round;
-  const lastScore = lastTurn.reduce((sum, multiplier) => sum + multiplier * target, 0);
+  // Si on est revenu au tour précédent, annuler aussi le dernier score du robot (s'il existe)
+  if (backToPreviousRound && robotIndex !== -1) {
+    const robotPlayer = props.players[robotIndex];
+    if (robotPlayer.scores.length > 0) {
+      const lastRobotTurn = robotPlayer.scores[robotPlayer.scores.length - 1];
+      const robotLastScoreValue = lastRobotTurn.reduce((sum, multiplier) => sum + multiplier * round, 0);
+      robotPlayer.totalScore -= robotLastScoreValue;
+      robotPlayer.scores.pop();
+    }
+  }
 
-  player.totalScore -= lastScore;
+  // Réinitialiser les flèches
   darts.value = [0, 0, 0];
 }
 
-function replay() {
-  window.location.reload();
 
-}
 
-function saveResults() {
-console.log("Sauvegarde des résultats", props);
-}
+
 
 const gameOver = computed(() => currentRound.value > nb);
 
@@ -257,49 +289,13 @@ const humanPlayersSorted = computed(() =>
       </div>
 
       <div v-else>
-        <h2>Partie terminée</h2>
-        <ul class="final-scores">
-          <li
-  v-for="(player, index) in sortedPlayers"
-  :key="player.name"
-  class="final-score-item"
->
-  <div class="final-player-name-above">
-
-    <template v-if="player.name !== robotName">
-      <span v-if="humanPlayersSorted[0]?.name === player.name">🥇</span>
-      <span v-else-if="humanPlayersSorted[1]?.name === player.name">🥈</span>
-      <span v-else-if="humanPlayersSorted[2]?.name === player.name">🥉</span>
-    </template>
-    {{ player.name }}
-  </div>
-  <img :src="player.avatar" alt="avatar" class="final-avatar-large" />
-
- 
-  <div class="final-player-info">
-    <div class="final-player-stats">
-      <span class="stat-badge">Hits : {{ stats(player).hits }}/{{ stats(player).total }}</span>
-      <span class="stat-badge">Hits (F1) : {{ stats(player).hitsF1 }}/{{ stats(player).total/3 }}</span>
-      <span class="stat-badge">Hits (F2) : {{ stats(player).hitsF2 }}/{{ stats(player).total/3 }}</span>
-      <span class="stat-badge">Hits (F3) : {{ stats(player).hitsF3 }}/{{ stats(player).total/3 }}</span>
-      <span class="stat-badge">Miss : {{ stats(player).miss }}</span>
-      <span class="stat-badge">Single : {{ stats(player).single }}</span>
-      <span class="stat-badge">Double : {{ stats(player).double }}</span>
-      <span class="stat-badge">Triple : {{ stats(player).triple }}</span>
-      <span v-if="stats(player).shangai >= 1" class="stat-badge awsome-badge">Shangai : {{ stats(player).shangai }}</span>
-      <span v-if="stats(player).ttt >= 1" class="stat-badge awsome-badge">ttt : {{ stats(player).ttt }}</span>
-      <span v-if="stats(player).ddd >= 1" class="stat-badge awsome-badge">ddd : {{ stats(player).ddd }}</span>
-      <span v-if="stats(player).tt >= 1" class="stat-badge awsome-badge">tt : {{ stats(player).tt }}</span>
-      <span v-if="stats(player).dd >= 1" class="stat-badge awsome-badge">dd : {{ stats(player).dd }}</span>
-    </div>
-  </div>
-  <span class="final-player-score">{{ player.totalScore }} pts</span>
-</li>
-      </ul>
-        <p><button @click="replay">Rejouer</button></p>
-        <p v-if="role === 'admin'">
-    <button @click="saveResults">Sauvegarder les résultats</button>
-  </p>
+        <GameStats 
+    :sortedPlayers="sortedPlayers" 
+    :humanPlayersSorted="humanPlayersSorted"
+    :robotName="robotName" 
+    :stats="stats"
+    :replay="replay"
+  />
       </div>
     </div>
   </div>
@@ -446,68 +442,6 @@ button.active {
 
 
 
-.final-score-item {
-  display: flex;
-  flex-direction: column; 
-  align-items: center;  
-  gap: 8px;
-  margin-bottom: 24px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #eee;
-}
-
-.final-player-name-above {
-  font-weight: bold;
-  font-size: 1.3rem;
-  margin-bottom: 4px;
-  text-align: center;
-}
-
-.final-player-info {
-  width: 100%;
-  max-width: 350px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.final-player-stats {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.final-avatar-large {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-  margin-bottom: 8px;
-}
-
-.final-player-score {
-  font-style: italic;
-  font-weight: bold;
-  text-align: center;
-  margin-top: 8px;
-  font-size: 1.1rem;
-  min-width: auto;
-}
-
-.stat-badge {
-  display: inline-block;
-  padding: 3px 8px;
-  margin: 2px 4px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  background-color: #fafafa;
-  font-size: 0.75rem;
-  color: #333;
-  box-shadow: 1px 1px 2px rgba(0,0,0,0.04);
-  transition: background-color 0.3s, border-color 0.3s;
-}
 
 .awsome-badge {
   border-color: #e91e63;
@@ -566,37 +500,8 @@ button.active {
 }
 
 
-.final-player-score {
-  font-style: italic;
-  font-weight: bold;
-  min-width: 60px;
-  text-align: right;
-}
 
-.replay-button {
-  padding: 12px 24px;
-  font-weight: bold;
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
 
-.replay-button:hover {
-  background-color: #0056b3;
-}
-
-.final-scores {
-  list-style: none;
-  padding: 0;
-  margin: 0 auto;       /* centre horizontalement la liste */
-  max-width: 600px;     /* limite la largeur pour un meilleur centrage */
-  display: flex;
-  flex-direction: column;
-  align-items: center;  /* centre les éléments enfants horizontalement */
-  gap: 24px;            /* espace entre les joueurs */
-}
 
 
 </style>

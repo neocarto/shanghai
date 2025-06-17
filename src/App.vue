@@ -6,11 +6,11 @@ import Login from './components/Login.vue';
 
 const predefinedPlayers = [
   { name: "Matt", avatar: "https://avatars.githubusercontent.com/u/12172162" },
-  { name: "Darts Vador", avatar: import.meta.env.BASE_URL + "img/nico.png" },
+  { name: "Darts Vador", avatar: import.meta.env.BASE_URL + "img/dartsvador.png" },
   { name: "Cramomille", avatar: import.meta.env.BASE_URL + "img/default.jpg" },
   { name: "Feu d'artifice", avatar: "https://avatars.githubusercontent.com/u/3041254" },
   { name: "Ro", avatar: import.meta.env.BASE_URL + "img/ro.jpg" },
-  { name: "Louis", avatar: import.meta.env.BASE_URL + "img/van gerwen.png" },
+  { name: "Louis CLXXX", avatar: import.meta.env.BASE_URL + "img/crown.jpeg" },
   { name: "Angelo", avatar: import.meta.env.BASE_URL + "img/default.jpg" },
 ];
 
