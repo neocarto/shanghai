@@ -100,11 +100,9 @@ function stats(player) {
 function setDart(index, value) {
   darts.value[index] = value;
   if (navigator.vibrate) {
-    navigator.vibrate(100);
-    
-  }
-
-}
+    navigator.vibrate(30);
+      }
+    }
 
 const currentTurnScore = computed(() => {
   const target = currentRound.value;
@@ -113,6 +111,9 @@ const currentTurnScore = computed(() => {
 
 
 function submitTurn() {
+  if (navigator.vibrate) {
+    navigator.vibrate(30);
+      }
   const player = props.players[currentPlayerIndex.value];
 
   if (player.name === robotName) {
