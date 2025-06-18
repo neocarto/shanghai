@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import PlayerSelector from './components/PlayerSelector.vue';
 import Game from './components/Game.vue';
 import Login from './components/Login.vue';
+import ScoreList from './components/RecordedStats.vue'; // tu peux le garder sous ce nom si tu préfères
 
 const predefinedPlayers = [
   { name: "Matt" },
@@ -15,35 +16,49 @@ const predefinedPlayers = [
 ];
 
 const user = ref(null);
-const gameStarted = ref(false);
 const selectedPlayers = ref([]);
-
-function startGame(playersWithAvatars) {
-  selectedPlayers.value = playersWithAvatars;
-  gameStarted.value = true;
-}
+const view = ref('login'); // 'login' | 'selection' | 'game' | 'scores'
 
 function handleLogin(data) {
   user.value = data;
+  view.value = 'selection';
+}
+
+function startGame(playersWithAvatars) {
+  selectedPlayers.value = playersWithAvatars;
+  view.value = 'game';
+}
+
+function goToScores() {
+  view.value = 'scores';
+}
+
+function goBackToSelection() {
+  view.value = 'selection';
 }
 </script>
 
 <template>
   <div>
-    <Login v-if="!user" @login="handleLogin" />
+    <Login v-if="view === 'login'" @login="handleLogin" />
 
-    <div v-else>
-      <PlayerSelector 
-        v-if="!gameStarted" 
-        :predefinedPlayers="predefinedPlayers"
-        :role="user.role"
-        @start-game="startGame" 
-      />
-      <Game 
-        v-else 
-        :players="selectedPlayers" 
-        :role="user.role" 
-      />
-    </div>
+    <PlayerSelector
+      v-else-if="view === 'selection'"
+      :predefinedPlayers="predefinedPlayers"
+      :role="user.role"
+      @start-game="startGame"
+      @view-scores="goToScores"
+    />
+
+    <Game
+      v-else-if="view === 'game'"
+      :players="selectedPlayers"
+      :role="user.role"
+    />
+
+    <ScoreList
+      v-else-if="view === 'scores'"
+      @back="goBackToSelection"
+    />
   </div>
 </template>

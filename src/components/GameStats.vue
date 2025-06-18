@@ -13,6 +13,7 @@
               <span v-if="humanPlayersSorted[0]?.name === player.name">🥇</span>
               <span v-else-if="humanPlayersSorted[1]?.name === player.name">🥈</span>
               <span v-else-if="humanPlayersSorted[2]?.name === player.name">🥉</span>
+              <span v-else-if="humanPlayersSorted[3]?.name === player.name">🍫</span>
             </template>
             {{ player.name }}
           </div>
@@ -49,7 +50,6 @@ const props = defineProps(['sortedPlayers', 'humanPlayersSorted', 'robotName', '
 import { supabase } from '../supabase';
 
 
-console.log(props.sortedPlayers)
 async function saveScore() {
   const timestamp = Date.now();
   console.log(props.sortedPlayers)

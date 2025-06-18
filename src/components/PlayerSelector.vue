@@ -139,8 +139,12 @@ onMounted(() => {
 
   <div class="action-buttons">
     <button v-if="players.length >= 2" @click="random()">Ordre aléatoire</button>
-    <button v-if="players.length >= 1" @click="startGame">JOUER</button>
+    <button v-if="players.length >= 1" @click="startGame" class="jouer-button">JOUER</button>
   </div>
+
+  <div v-if="role === 'admin'" class="action-buttons">
+  <button @click="$emit('view-scores')">Voir les scores enregistrés</button>
+</div>
   <br/>
 </template>
 
@@ -279,5 +283,11 @@ button {
   justify-content: center;
   gap: 16px;
   margin-top: 16px;
+}
+
+
+.jouer-button {
+  background-color: #e91e63;
+  font-weight: bold;
 }
 </style>
