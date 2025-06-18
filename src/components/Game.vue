@@ -230,7 +230,9 @@ const humanPlayersSorted = computed(() =>
 <template>
 
 <div>
-
+  <p v-if="role === 'admin'" style="font-size: 0.8rem; color: gray; text-align: center;  margin-bottom: -10px;">
+    Cette partie sera enregistrée
+  </p>
    <div class="container">
       <div v-if="!gameOver">
         <h2 class="round-circle">{{ currentRound }}</h2>
@@ -283,13 +285,13 @@ const humanPlayersSorted = computed(() =>
           </div>
         </div>
 
-        <p style="font-weight: normal; color: gray; margin-top: 4px;">+{{ currentTurnScore }}</p>
+        <!-- <p style="font-weight: normal; color: gray; margin-top: 4px;">+{{ currentTurnScore }}</p>
         <p style="margin-top: 12px; font-weight: bold;">
           Score : {{ currentTurnScore + props.players[currentPlayerIndex].totalScore }}
-        </p>
+        </p> -->
 
         <p v-if="props.players[currentPlayerIndex].name !== robotName">
-          <button @click="submitTurn" class="validate">Valider ce tour</button>
+          <button @click="submitTurn" class="validate">Valider ce tour (+{{currentTurnScore}} pts)</button>
         </p>
         <p><button @click="undoTurn" class="undo-button">&#8592;</button></p>
       </div>

@@ -1,7 +1,5 @@
 <script setup>
-import { ref,defineEmits, onMounted } from 'vue';
-
-
+import { ref, defineEmits, onMounted } from 'vue';
 
 const props = defineProps({
   predefinedPlayers: Array,
@@ -9,54 +7,75 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['start-game']);
-
-// Players
 const players = ref([]);
 const newPlayer = ref("");
-const predefinedPlayersNames = props.predefinedPlayers.map(d => d.name);
 
-function addAllPlayers() {
-  const allNames = props.predefinedPlayers.map(p => p.name);
-  players.value = [...new Set([...players.value, ...allNames])];
-  random(); 
-}
+// Avatars par défaut
+const defaultAvatars = [
+  import.meta.env.BASE_URL + "img/invite_1.jpg",
+  import.meta.env.BASE_URL + "img/invite_2.png",
+  import.meta.env.BASE_URL + "img/invite_3.png",
+  import.meta.env.BASE_URL + "img/invite_4.png",
+  import.meta.env.BASE_URL + "img/invite_5.png",
+  import.meta.env.BASE_URL + "img/invite_6.png",
+  import.meta.env.BASE_URL + "img/invite_7.png",
+  import.meta.env.BASE_URL + "img/invite_8.png",
+  import.meta.env.BASE_URL + "img/invite_9.png",
+  import.meta.env.BASE_URL + "img/invite_10.png",
+  import.meta.env.BASE_URL + "img/invite_11.png",
+];
+let unusedDefaultAvatars = [...defaultAvatars];
 
-function getPlayerData(name) {
-  return props.predefinedPlayers.find(p => p.name === name) || { name, avatar: import.meta.env.BASE_URL + "img/default.jpg" };
-}
-
-function deletePlayer(player) {
-  players.value = players.value.filter(m => m !== player);
+function getRandomDefaultAvatar() {
+  if (unusedDefaultAvatars.length === 0) {
+    unusedDefaultAvatars = [...defaultAvatars];
+  }
+  const index = Math.floor(Math.random() * unusedDefaultAvatars.length);
+  return unusedDefaultAvatars.splice(index, 1)[0];
 }
 
 function addPlayer() {
   const name = newPlayer.value.trim();
   if (name === "") return;
-  players.value.push(name);
-  players.value = [...new Set(players.value)];
+  if (players.value.some(p => p.name === name)) return;
+
+  const found = props.predefinedPlayers.find(p => p.name === name);
+  players.value.push({
+    name,
+    avatar: found?.avatar || getRandomDefaultAvatar()
+  });
+
   newPlayer.value = "";
 }
 
-const onInputChange = () => {
-  addPlayer(newPlayer.value);
+function onInputChange() {
+  addPlayer();
 }
 
-function moveUpPlayer(value) {
-  const index = players.value.indexOf(value);
-  if (index <= 0) return players.value;
+function addAllPlayers() {
+  players.value = props.predefinedPlayers.map(p => ({
+    name: p.name,
+    avatar: p.avatar || getRandomDefaultAvatar()
+  }));
+}
+
+function deletePlayer(name) {
+  players.value = players.value.filter(p => p.name !== name);
+}
+
+function moveUpPlayer(name) {
+  const index = players.value.findIndex(p => p.name === name);
+  if (index <= 0) return;
   [players.value[index - 1], players.value[index]] = [players.value[index], players.value[index - 1]];
-  return players.value;
 }
 
-function moveDownPlayer(value) {
-  const index = players.value.indexOf(value);
-  if (index === -1 || index >= players.value.length - 1) return players.value;
-  [players.value[index], players.value[index + 1]] = [players.value[index + 1], players.value[index]];
-  return players.value;
+function moveDownPlayer(name) {
+  const index = players.value.findIndex(p => p.name === name);
+  if (index === -1 || index >= players.value.length - 1) return;
+  [players.value[index + 1], players.value[index]] = [players.value[index], players.value[index + 1]];
 }
 
 function random() {
-  players.value.sort((a,b) => a>b ? -1 : 1);
   for (let i = players.value.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [players.value[i], players.value[j]] = [players.value[j], players.value[i]];
@@ -64,14 +83,14 @@ function random() {
 }
 
 function goFullScreen() {
-  const el = document.documentElement; // plein écran sur tout le document
+  const el = document.documentElement;
   if (el.requestFullscreen) {
     el.requestFullscreen();
-  } else if (el.mozRequestFullScreen) { // Firefox
+  } else if (el.mozRequestFullScreen) {
     el.mozRequestFullScreen();
-  } else if (el.webkitRequestFullscreen) { // Chrome, Safari, Opera
+  } else if (el.webkitRequestFullscreen) {
     el.webkitRequestFullscreen();
-  } else if (el.msRequestFullscreen) { // IE/Edge
+  } else if (el.msRequestFullscreen) {
     el.msRequestFullscreen();
   }
 }
@@ -86,58 +105,46 @@ onMounted(() => {
     addAllPlayers();
   }
 });
-
-
 </script>
 
 <template>
-  
+  <h1>Shangaï 🎯</h1>
+  <p style="font-size: 0.8em; text-align: center; font-style: italic; padding: 0 20px;">
+    « I want to win. It’s as simple as that. » — Michael van Gerwen
+  </p>
 
-<h1>Shangaï 🎯</h1>
-<p style="font-size: 0.8em; max-width: 100%; overflow-wrap: break-word; white-space: pre-wrap; text-align: center; margin: 0 auto; font-style: italic; padding: 0 20px;">
-« I want to win. It’s as simple as that. » — Michael van Gerwen
-</p>
-
-<form @submit.prevent="addPlayer(newPlayer)">
+  <form @submit.prevent="addPlayer">
     <input
       type="text"
       v-model="newPlayer"
       placeholder="Ajouter un joueur"
       @change="onInputChange"
     />
-
-    <button :disabled="newPlayer.length==0" >Ajouter</button>
+    <button :disabled="newPlayer.length === 0">Ajouter</button>
   </form>
 
-
   <ul class="players-grid">
-    <li v-for="player in players" :key="player" class="player-card">
-  <div class="avatar-placeholder">
-    <img
-      :src="getPlayerData(player).avatar"
-      alt="avatar"
-      class="avatar-img"
-    />
-  </div>
-  <div class="player-name">{{ player }}</div>
-  <div class="player-actions">
-    <button @click="moveUpPlayer(player)">&#8592;</button>
-    <button @click="deletePlayer(player)">❌</button>
-    <button @click="moveDownPlayer(player)">&#8594;</button>
-  </div>
-</li>
-</ul>
-<div class="action-buttons">
-  <button v-if="players.length >= 2" @click="random()">Ordre aléatoire</button>
-  <button v-if="players.length >= 1" @click="startGame">JOUER</button>
-</div>
-<br/>
+    <li v-for="player in players" :key="player.name" class="player-card">
+      <div class="avatar-placeholder">
+        <img :src="player.avatar" alt="avatar" class="avatar-img" />
+      </div>
+      <div class="player-name">{{ player.name }}</div>
+      <div class="player-actions">
+        <button @click="moveUpPlayer(player.name)">&#8592;</button>
+        <button @click="deletePlayer(player.name)">❌</button>
+        <button @click="moveDownPlayer(player.name)">&#8594;</button>
+      </div>
+    </li>
+  </ul>
 
-
+  <div class="action-buttons">
+    <button v-if="players.length >= 2" @click="random()">Ordre aléatoire</button>
+    <button v-if="players.length >= 1" @click="startGame">JOUER</button>
+  </div>
+  <br/>
 </template>
 
 <style scoped>
-
 h1 {
   text-align: center;
   margin-top: 24px;
@@ -172,26 +179,6 @@ h1 {
   background: transparent;  
 }
 
-.add-all-players-link {
-  background: none;
-  border: none;
-  color: #666;
-  cursor: pointer;
-  font-size: 0.85rem;
-  padding: 0;
-  margin: 8px auto 24px;
-  display: block;
-  width: fit-content;
-  user-select: none;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.add-all-players-link:hover {
-  color: #000;
-  text-decoration: underline;
-}
-
 .avatar-placeholder {
   width: 80px;
   height: 80px;
@@ -203,7 +190,7 @@ h1 {
   justify-content: center;
   align-items: center;
   font-size: 36px;
-  color: #444444; /* couleur neutre pour l’emoji */
+  color: #444444;
   margin-top: 8px;
   border: 1px solid var(--surface-3);
   box-shadow: 0 1px 4px rgba(0,0,0,0.4);
@@ -246,7 +233,7 @@ h1 {
 .player-actions {
   display: flex;
   justify-content: center;
-  gap: 6px; /* réduit de 12px à 6px */
+  gap: 6px;
   margin-top: 8px;
 }
 
@@ -282,18 +269,15 @@ button {
   form button {
     width: 100%;
     box-sizing: border-box;
-    margin: 2px;     
-    padding: 8px 10px;  
+    margin: 2px;
+    padding: 8px 10px;
   }
 }
+
 .action-buttons {
   display: flex;
   justify-content: center;
   gap: 16px;
   margin-top: 16px;
 }
-
 </style>
-
-
-
