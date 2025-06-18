@@ -50,6 +50,7 @@ watch(
     const robotIndex = props.players.findIndex(p => p.name === robotName);
     if (newLength > 1 && robotIndex === -1) {
       props.players.push({
+        id:0,
         name: robotName,
         avatar: robotAvatar,
         scores: [],

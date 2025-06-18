@@ -54,6 +54,7 @@ function onInputChange() {
 
 function addAllPlayers() {
   players.value = props.predefinedPlayers.map(p => ({
+    id:p.id,
     name: p.name,
     avatar: p.avatar || getRandomDefaultAvatar()
   }));

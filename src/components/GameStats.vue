@@ -55,6 +55,7 @@ const timestamp = Date.now();
 console.log(props.sortedPlayers)
 
 const insertData = props.sortedPlayers.map(d => ({
+  player_id: d.id,
   name: d.name,
   timestamp: timestamp,
   score: d.totalScore,

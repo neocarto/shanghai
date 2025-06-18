@@ -6,13 +6,13 @@ import Login from './components/Login.vue';
 import ScoreList from './components/RecordedStats.vue'; // tu peux le garder sous ce nom si tu préfères
 
 const predefinedPlayers = [
-  { name: "Matt" },
-  { name: "Darts Vador", avatar: import.meta.env.BASE_URL + "img/dartsvador.png" },
-  { name: "Cramomille" },
-  { name: "Feu d'artifice" },
-  { name: "Robull", avatar: import.meta.env.BASE_URL + "img/ro.jpg" },
-  { name: "Louis CLXXX", avatar: import.meta.env.BASE_URL + "img/crown.jpeg" },
-  { name: "Angelo" },
+  { id: 1,name: "Matt" },
+  { id: 2,name: "Darts Vador", avatar: import.meta.env.BASE_URL + "img/dartsvador.png" },
+  { id: 3,name: "Feu d'artifice" },
+  { id: 4,name: "Robull", avatar: import.meta.env.BASE_URL + "img/ro.jpg" },
+  { id: 5 ,name: "Louis CLXXX", avatar: import.meta.env.BASE_URL + "img/crown.jpeg" },
+  { id: 6,name: "Angelo" },
+  { id: 7,name: "Cramomille" },
 ];
 
 const user = ref(null);
