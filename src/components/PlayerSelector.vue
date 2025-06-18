@@ -109,9 +109,10 @@ onMounted(() => {
 
 <template>
   <h1>Shangaï 🎯</h1>
-  <p style="font-size: 0.8em; text-align: center; font-style: italic; padding: 0 20px;">
-    « I want to win. It’s as simple as that. » — Michael van Gerwen
-  </p>
+  <div v-if="role === 'admin'" class="action-buttons">
+  <a href="#" @click.prevent="$emit('view-scores')" class="link-button">Voir les scores enregistrés</a>
+</div>
+
 
   <form @submit.prevent="addPlayer">
     <input
@@ -142,9 +143,7 @@ onMounted(() => {
     <button v-if="players.length >= 1" @click="startGame" class="jouer-button">JOUER</button>
   </div>
 
-  <div v-if="role === 'admin'" class="action-buttons">
-  <button @click="$emit('view-scores')">Voir les scores enregistrés</button>
-</div>
+
   <br/>
 </template>
 

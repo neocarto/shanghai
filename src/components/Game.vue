@@ -74,7 +74,6 @@ props.players.forEach(player => {
 
 function stats(player) {
 // Record
-  console.log(player.name);
   // Display
   const flat = player.scores.flat();
   const total = flat.length;
@@ -285,10 +284,6 @@ const humanPlayersSorted = computed(() =>
           </div>
         </div>
 
-        <!-- <p style="font-weight: normal; color: gray; margin-top: 4px;">+{{ currentTurnScore }}</p>
-        <p style="margin-top: 12px; font-weight: bold;">
-          Score : {{ currentTurnScore + props.players[currentPlayerIndex].totalScore }}
-        </p> -->
 
         <p v-if="props.players[currentPlayerIndex].name !== robotName">
           <button @click="submitTurn" class="validate">Valider ce tour (+{{currentTurnScore}} pts)</button>
@@ -303,6 +298,7 @@ const humanPlayersSorted = computed(() =>
     :robotName="robotName" 
     :stats="stats"
     :replay="replay"
+    :role="props.role" 
   />
       </div>
     </div>
