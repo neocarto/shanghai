@@ -45,7 +45,7 @@
 <script setup>
 
 
-const props = defineProps(['sortedPlayers', 'humanPlayersSorted', 'robotName', 'stats']);
+const props = defineProps(['sortedPlayers', 'humanPlayersSorted', 'robotName', 'stats','role']);
 
 import { supabase } from '../supabase';
 
@@ -80,7 +80,13 @@ function replay() {
 }
 
 
-saveScore();
+if (props.role === 'admin') {
+  saveScore();
+  console.log('Admin role detected, saving scores...');
+} else {
+  console.log('Non-admin role, not saving scores.');
+}
+
 </script>
 
 
