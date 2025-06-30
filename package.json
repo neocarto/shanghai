@@ -1,9 +1,9 @@
 {
-  "name": "shangai",
+  "name": "shanghai",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "homepage": "https://neocarto.github.io/shangai",
+  "homepage": "https://neocarto.github.io/shanghai",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
