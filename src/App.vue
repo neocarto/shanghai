@@ -8,7 +8,7 @@ import ScoreList from './components/RecordedStats.vue'; // tu peux le garder sou
 const predefinedPlayers = [
   { id: 1,name: "Matt" },
   { id: 2,name: "Darts Vador", avatar: import.meta.env.BASE_URL + "img/dartsvador.png" },
-  { id: 3,name: "Feu d'artifice" },
+  { id: 3,name: "Dart Simpson", avatar: import.meta.env.BASE_URL + "img/dartsimpson.png" },
   { id: 4,name: "Robull", avatar: import.meta.env.BASE_URL + "img/ro.jpg" },
   { id: 5 ,name: "Louis CLXXX", avatar: import.meta.env.BASE_URL + "img/crown.jpeg" },
   { id: 6,name: "Angelo" },
