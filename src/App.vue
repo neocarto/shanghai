@@ -17,7 +17,7 @@ const predefinedPlayers = [
 
 const user = ref(null);
 const selectedPlayers = ref([]);
-const view = ref('login'); // 'login' | 'selection' | 'game' | 'scores'
+const view = ref('login'); 
 
 function handleLogin(data) {
   user.value = data;
