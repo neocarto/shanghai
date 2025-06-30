@@ -109,7 +109,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1>Shangaï 🎯</h1>
+  <h1>Shanghai 🎯</h1>
   <div v-if="role === 'admin'" class="action-buttons">
   <a href="#" @click.prevent="$emit('view-scores')" class="link-button">Voir les scores enregistrés</a>
 </div>
