@@ -11,7 +11,7 @@ const predefinedPlayers = [
   { id: 3,name: "Dart Simpson", avatar: import.meta.env.BASE_URL + "img/dartsimpson.png" },
   { id: 4,name: "Robull", avatar: import.meta.env.BASE_URL + "img/ro.jpg" },
   { id: 5 ,name: "Louis CLXXX", avatar: import.meta.env.BASE_URL + "img/crown.jpeg" },
-  { id: 6,name: "Angelo" },
+  { id: 6,name: "Angelo", avatar: import.meta.env.BASE_URL + "img/pp_angelo.png" },
   { id: 7,name: "Cramomille" },
 ];
 
