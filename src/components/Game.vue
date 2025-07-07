@@ -231,7 +231,7 @@ const humanPlayersSorted = computed(() =>
 
 <div>
   <p v-if="role === 'admin'" style="font-size: 0.8rem; color: gray; text-align: center;  margin-bottom: -10px;">
-    Cette partie sera enregistrée
+    Partie officielle et enregistrée
   </p>
    <div class="container">
       <div v-if="!gameOver">
