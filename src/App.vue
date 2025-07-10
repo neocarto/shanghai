@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import PlayerSelector from './components/PlayerSelector.vue';
 import Game from './components/Game.vue';
 import Login from './components/Login.vue';
-import ScoreList from './components/RecordedStats.vue'; // tu peux le garder sous ce nom si tu préfères
+import ScoreList from './components/RecordedStats.vue'; 
 
 const predefinedPlayers = [
   { id: 1,name: "Matt" },

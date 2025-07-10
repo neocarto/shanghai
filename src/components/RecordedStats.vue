@@ -50,6 +50,8 @@
   <script setup>
   import { ref, onMounted } from 'vue';
   import { supabase } from '../supabase';
+  import { min, max, mean, sum } from 'd3-array';
+  const d3 = Object.assign({}, { min, max, mean, sum });
   
   const bestScores = ref([]);
   const numberOne = ref(null);
@@ -65,50 +67,209 @@
       return;
     }
     if (!data.length) return;
+
+const stats = getstats(data);
+  console.log(stats)
+   
+  }
   
-    numberOne.value = data[0];
-  
-    const playerScoresMap = {};
-    const playerGamesCount = {};
-  
-    data.forEach(score => {
-      if (!playerScoresMap[score.name]) {
-        playerScoresMap[score.name] = [];
-        playerGamesCount[score.name] = 0;
+//   function formatDate(timestamp) {
+//     return new Date(timestamp).toLocaleString('fr-FR', {
+//       year: 'numeric',
+//       month: 'long',
+//       day: 'numeric',
+//     });
+//   }
+
+function getTimestamps() {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth(); // 0 = janvier
+
+  // 1er septembre dernier
+  const septFirst =
+    currentMonth >= 8
+      ? new Date(currentYear, 8, 1)
+      : new Date(currentYear - 1, 8, 1);
+  const timestampSeptFirst = septFirst.getTime();
+
+  // 31 juillet prochain
+  const july31 =
+    currentMonth <= 6
+      ? new Date(currentYear, 6, 31)
+      : new Date(currentYear + 1, 6, 31);
+  const timestampJuly31 = july31.getTime();
+
+  return {
+    septFirstLastYear: timestampSeptFirst,
+    july31Next: timestampJuly31
+  };
+}
+
+function streak(arr) {
+  arr = arr.flat();
+  let maxLength = 0;
+  let currentLength = 0;
+  let startIndexMax = -1;
+  let startIndexCurrent = 0;
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] !== 0) {
+      if (currentLength === 0) {
+        startIndexCurrent = i;
       }
-      playerScoresMap[score.name].push(score.score);
-      playerGamesCount[score.name]++;
-    });
-  
-    const playerAverages = {};
-    for (const player in playerScoresMap) {
-      const scores = playerScoresMap[player];
-      const total = scores.reduce((a, b) => a + b, 0);
-      playerAverages[player] = (total / scores.length).toFixed(2);
+      currentLength++;
+      if (currentLength > maxLength) {
+        maxLength = currentLength;
+        startIndexMax = startIndexCurrent;
+      }
+    } else {
+      currentLength = 0;
     }
-  
-    const seen = new Set([numberOne.value.name]);
-    bestScores.value = data.filter(score => {
-      if (seen.has(score.name)) return false;
-      seen.add(score.name);
-      return true;
-    }).map(score => ({
-      ...score,
-      average: Math.round(playerAverages[score.name]),
-      gamesPlayed: playerGamesCount[score.name]
-    }));
-  
-    numberOne.value.average = Math.round(playerAverages[numberOne.value.name]);
-    numberOne.value.gamesPlayed = playerGamesCount[numberOne.value.name];
   }
-  
-  function formatDate(timestamp) {
-    return new Date(timestamp).toLocaleString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  }
+
+  return maxLength;
+}
+
+function shangai(arr) {
+  return arr.filter((turn) => {
+    const counts = [0, 0, 0, 0]; // index 0 à 3
+    turn.forEach((d) => counts[d]++);
+    return counts[1] === 1 && counts[2] === 1 && counts[3] === 1;
+  }).length;
+}
+
+function getstats(scores, last = 10) {
+
+
+
+
+
+  // Players
+  let players = [...new Set(scores.map((d) => d.name))].map((name) => ({
+    name
+  }));
+
+  // Scores if the year (Between September 1 and July 31)
+  const intervall = getTimestamps();
+  const scores_year = scores
+    .filter((d) => d.timestamp >= intervall.septFirstLastYear)
+    .filter((d) => d.timestamp <= intervall.july31Next);
+  // Total number of games
+  const nb_all = scores.filter((d) => d.name == "Number One").length;
+  const nb_year = scores_year.filter((d) => d.name == "Number One").length;
+
+  // Stats
+  players = players.map((d) => {
+    const data = scores.filter((e) => e.name == d.name);
+    const data_year = scores_year.filter((e) => e.name == d.name);
+    const data_last = data.slice(-last);
+
+    // Played
+    const played_all = data.length;
+    const played_year = data_year.length;
+    const played_last = data_last.length;
+    // Assiduity
+    const assiduity_all = Math.round((1000 * data.length) / nb_all) / 10;
+    const assiduity_year = Math.round((1000 * data_year.length) / nb_year) / 10;
+    // Mean
+    const mean_all_raw = d3.mean(data.map((d) => d.score));
+    const mean_all = Math.round(mean_all_raw);
+    const mean_year_raw = d3.mean(data_year.map((d) => d.score));
+    const mean_year = Math.round(mean_year_raw);
+    const mean_last_raw = d3.mean(data_last.map((d) => d.score));
+    const mean_last = Math.round(mean_last_raw);
+    // Best
+    const max_all = Math.round(d3.max(data.map((d) => d.score)));
+    const max_year = Math.round(d3.max(data_year.map((d) => d.score)));
+    const max_last = Math.round(d3.max(data_last.map((d) => d.score)));
+    // Worst
+    const min_all = Math.round(d3.min(data.map((d) => d.score)));
+    const min_year = Math.round(d3.min(data_year.map((d) => d.score)));
+    const min_last = Math.round(d3.min(data_last.map((d) => d.score)));
+    // Streak
+
+    
+    const streak_all = d3.max(
+      data.map((d) => JSON.parse(d.hits).flat()).map((d) => streak(d))
+    );
+    const streak_year = d3.max(
+      data_year.map((d) => JSON.parse(d.hits).flat()).map((d) => streak(d))
+    );
+    const streak_last = d3.max(
+      data_last.map((d) => JSON.parse(d.hits).flat()).map((d) => streak(d))
+    );
+
+    // Shangai
+    const shangai_all = d3.sum(data.map((d) => shangai(JSON.parse(d.hits))));
+    const shangai_pct_all =
+      Math.round(10 * (shangai_all / data.length) * 100) / 10;
+    const shangai_year = d3.sum(data_year.map((d) => shangai(JSON.parse(d.hits))));
+    const shangai_pct_year =
+      Math.round(10 * (shangai_year / data.length) * 100) / 10;
+    const shangai_last = d3.sum(data_last.map((d) => shangai(JSON.parse(d.hits))));
+    const shangai_pct_last =
+      Math.round(10 * (shangai_last / data.length) * 100) / 10;
+
+    // ttt
+    // ddd
+    // tt
+    // dd
+    // win
+
+    return {
+      ...d,
+      // all
+      played_all,
+      mean_all_raw,
+      mean_all,
+      max_all,
+      min_all,
+     streak_all,
+    assiduity_all,
+      shangai_all,
+      shangai_pct_all,
+      // year
+      played_year,
+      mean_year_raw,
+      mean_year,
+      max_year,
+      min_year,
+     streak_year,
+    assiduity_year,
+      shangai_year,
+      shangai_pct_year,
+      // Last
+      played_last,
+      mean_last_raw,
+      mean_last,
+      max_last,
+      min_last,
+    streak_last,
+      shangai_last,
+      shangai_pct_last
+    };
+  });
+
+  // Rank
+  players = [...players]
+    .sort((a, b) => b["mean_all_raw"] - a["mean_all_raw"])
+    .map((d, i) => ({ ...d, rank_all: i }));
+  players = [...players]
+    .sort((a, b) => b["mean_year_raw"] - a["mean_year_raw"])
+    .map((d, i) => ({ ...d, rank_year: i }));
+  players = [...players]
+    .sort((a, b) => b["mean_last_raw"] - a["mean_last_raw"])
+    .map((d, i) => ({ ...d, rank_last: i }));
+
+  // Output
+  return players;
+}
+
+
+
+
+
   
   onMounted(() => {
     fetchScores();
