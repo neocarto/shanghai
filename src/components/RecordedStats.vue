@@ -627,7 +627,7 @@ function getstats(scores, last = 10) {
   }
   
   .player-name {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 0.3rem;
     display: flex;
@@ -674,7 +674,7 @@ function getstats(scores, last = 10) {
   .score-table {
   width: 100%;
   max-width: 100%;
-  font-size: 0.65rem;
+  font-size: 0.70rem;
   background-color: #fff;
   table-layout: fixed;
 
