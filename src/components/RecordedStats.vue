@@ -1,5 +1,22 @@
 <template>
+
+
+
+
+
     <div class="scores-page">
+      <div class="podium" v-if="stats.length >= 3" style="position: relative; display: inline-block;">
+  <img src="/img/podium.webp" alt="Podium" class="podium-image" />
+
+  <!-- Texte sur la marche 1 -->
+  <div class="podium-text text-1">{{ stats[0].name }}</div>
+
+  <!-- Texte sur la marche 2 -->
+  <div class="podium-text text-2">{{ stats[1].name }}</div>
+
+  <!-- Texte sur la marche 3 -->
+  <div class="podium-text text-3">{{ stats[2].name }}</div>
+</div>
   
       <div v-if="stats.length" class="players-list">
         <div v-for="(score, index) in stats" :key="index" class="player-card">
@@ -157,6 +174,7 @@
   
   const stats = ref([]);
   const numberOne = ref([]);
+  const podium = ref(null);
   
   async function fetchScores() {
     const { data, error } = await supabase
@@ -529,6 +547,43 @@ function getstats(scores, last = 10) {
     min-height: 100vh;
     box-sizing: border-box;
   }
+
+  .podium-image {
+  width: 400px;  /* adapte selon ta taille */
+  height: auto;
+  display: block;
+}
+
+.podium-text {
+  position: absolute;
+  color: white;
+  font-weight: bold;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+
+/* Positionnement précis des 3 textes */
+.text-1 {
+  font-size: 1.4rem;
+  top: 10px;  
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.text-2 {
+  font-size: 1rem;
+  top: 85px;    
+  left: 19%;
+  transform: translateX(-50%);
+}
+
+.text-3 {
+  font-size: 0.8rem;
+  top: 120px;    
+  left: 83%;
+  transform: translateX(-50%);
+}
+
   
   h2 {
     font-weight: 700;
