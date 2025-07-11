@@ -4,6 +4,9 @@ import PlayerSelector from './components/PlayerSelector.vue';
 import Game from './components/Game.vue';
 import Login from './components/Login.vue';
 import ScoreList from './components/RecordedStats.vue'; 
+import GameStats from './components/GameStats.vue';
+
+
 
 const predefinedPlayers = [
   { id: 1,name: "Matt" },
@@ -54,11 +57,19 @@ function goBackToSelection() {
       v-else-if="view === 'game'"
       :players="selectedPlayers"
       :role="user.role"
+      @view-scores="goToScores"
     />
 
     <ScoreList
       v-else-if="view === 'scores'"
       @back="goBackToSelection"
+      @view-scores="goToScores"
     />
+
+
+
+
+
+
   </div>
 </template>

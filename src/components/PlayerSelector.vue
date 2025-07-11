@@ -111,7 +111,7 @@ onMounted(() => {
 <template>
   <h1>Shanghai 🎯</h1>
   <div v-if="role === 'admin'" class="action-buttons">
-  <a href="#" @click.prevent="$emit('view-scores')" class="link-button">Voir les scores enregistrés</a>
+  <a href="#" @click.prevent="$emit('view-scores')" class="link-button">Voir le classement</a>
 </div>
 
 

@@ -39,14 +39,17 @@
       </li>
     </ul>
     <p><button @click="replay">Rejouer</button></p>
-    <div v-if="role === 'admin'" class="action-buttons">
+    <!-- <div v-if="role === 'admin'" class="action-buttons">
   <a href="https://observablehq.com/embed/910df7914b748f22@739?cells=viewof+n%2Cchart1%2Cviewof+player%2Cchart3%2Cassiduity%2Cbest%2Cwrost%2Cmean%2Csequence%2CbestShot%2Ctriples" class="link-button" target = "_blank">Voir les scores enregistrés</a>
+</div> -->
+
+<div v-if="role === 'admin'" class="action-buttons">
+  <a href="#" @click.prevent="$emit('view-scores')" class="link-button">Voir le classement</a>
 </div>
   </div>
 </template>
 
 <script setup>
-
 
 const props = defineProps(['sortedPlayers', 'humanPlayersSorted', 'robotName', 'stats','role']);
 
@@ -70,11 +73,7 @@ const { data, error } = await supabase
   .from('scores')
   .insert(insertData);
 
-if (error) {
-  console.error('Erreur lors de l’insertion :', error);
-} else {
-  console.log('Scores enregistrés :', data);
-}
+
 }
 
 
@@ -84,12 +83,8 @@ function replay() {
 
 
 if (props.role === 'admin') {
-
   saveScore();
-  console.log('Admin role detected, saving scores...');
-} else {
-  console.log('Non-admin role, not saving scores.');
-}
+} 
 
 </script>
 

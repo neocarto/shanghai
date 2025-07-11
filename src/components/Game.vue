@@ -299,7 +299,8 @@ const humanPlayersSorted = computed(() =>
     :robotName="robotName" 
     :stats="stats"
     :replay="replay"
-    :role="props.role" 
+    :role="props.role"
+     @view-scores="$emit('view-scores')"
   />
       </div>
     </div>

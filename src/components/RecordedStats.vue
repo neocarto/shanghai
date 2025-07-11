@@ -1,48 +1,150 @@
 <template>
     <div class="scores-page">
   
-      <div v-if="bestScores.length" class="players-list">
-        <div v-for="(score, index) in bestScores" :key="index" class="player-card">
-          <h3 class="player-name">
-            <span class="medal" :class="'medal-' + index">
-              <span v-if="index === 0">🥇</span>
-              <span v-else-if="index === 1">🥈</span>
-              <span v-else-if="index === 2">🥉</span>
-              <span v-else-if="index === 3">🍫</span>
-            </span>
-            {{ score.name }}
-          </h3>
-          <p class="score-text">
-            Meilleur score : <b>{{ score.score }} pts</b>
-            <small> ({{ formatDate(score.timestamp) }})</small>
-          </p>
-          <p class="score-text">
-            Score moyen : <b>{{ score.average }} pts</b>
-          </p>
-          <p class="score-text">
-            Parties jouées : <b>{{ score.gamesPlayed }}</b>
-          </p>
+      <div v-if="stats.length" class="players-list">
+        <div v-for="(score, index) in stats" :key="index" class="player-card">
+          <h2 class="player-name">
+            {{ score.medal_mean_last }}
+            {{ score.name }} - <small>{{ score.mean_last}} pts</small>
+          </h2>
+
+          <table class="score-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Sur 10 parties</th>
+        <th>Sur l'année</th>
+        <th>Hall of Fame</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Parties</th>
+        <td>{{ score.played_last }}</td>
+        <td>{{ score.played_year }}</td>
+        <td>{{ score.played_all }}</td>
+      </tr>
+      <tr>
+        <th>Assiduité</th>
+        <td>-</td>
+        <td>{{ score.assiduity_year }} %</td>
+        <td>{{ score.assiduity_all }} %</td>
+      </tr>
+      <tr>
+        <th>Moyenne</th>
+        <td>{{ score.mean_last }} {{ score.medal_mean_last }} </td>
+        <td>{{ score.mean_year }} {{ score.medal_mean_year }} </td>
+        <td>{{ score.mean_all }} {{ score.medal_mean_all }} </td>
+      </tr>
+      <tr>
+        <th>Meilleur</th>
+        <td>{{ score.max_last }} {{ score.medal_max_last }} </td>
+        <td>{{ score.max_year }} {{ score.medal_max_year }} </td>
+        <td>{{ score.max_all }} {{ score.medal_max_all }} </td>
+      </tr>
+
+      <tr>
+        <th>Streak</th>
+        <td>{{ score.streak_last }} {{ score.medal_streak_last }} </td>
+        <td>{{ score.streak_year }} {{ score.medal_streak_year }} </td>
+        <td>{{ score.streak_all }} {{ score.medal_streak_alll }} </td>
+      </tr>
+      <tr>
+        <th>Hits <small>(60)</small></th>
+        <td>{{ score.hits_last }} {{ score.medal_hits_last }} </td>
+        <td>{{ score.hits_year }} {{ score.medal_hits_year }}  </td>
+        <td>{{ score.hits_all }} {{ score.medal_hits_all }} </td>
+      </tr>
+      <tr>
+        <th>Hits <small>(180)</small></th>
+        <td>{{ score.hits2_last }} {{ score.medal_hits2_last }}</td>
+        <td>{{ score.hits2_year }}  {{ score.medal_hits2_year }}</td>
+        <td>{{ score.hits2_all }} {{ score.medal_hits2_all }}</td>
+      </tr>
+      <tr>
+        <th>Meilleur coup</th>
+        <td>{{ score.hitbest_last }} {{ score.medal_hitbest_last }}</td>
+        <td>{{ score.hitbest_year }} {{ score.medal_hitbest_last }} </td>
+        <td>{{ score.hitbest_all }} {{ score.medal_hitbest_last }}</td>
+      </tr>
+      <tr>
+        <th>Shanghai</th>
+        <td>{{ score.shanghai_last }}</td>
+        <td>{{ score.shanghai_year }}</td>
+        <td>{{ score.shanghai_all }}</td>
+      </tr>
+      <tr>
+        <th>ttt</th>
+        <td>{{ score.ttt_last }}</td>
+        <td>{{ score.ttt_year }}</td>
+        <td>{{ score.ttt_all }}</td>
+      </tr>
+      <tr>
+        <th>tt</th>
+        <td>{{ score.tt_last }}</td>
+        <td>{{ score.tt_year }}</td>
+        <td>{{ score.tt_all }}</td>
+      </tr>
+      <tr>
+        <th>ddd</th>
+        <td>{{ score.ddd_last }}</td>
+        <td>{{ score.ddd_year }}</td>
+        <td>{{ score.ddd_all }}</td>
+      </tr>
+      <tr>
+        <th>dd</th>
+        <td>{{ score.dd_last }}</td>
+        <td>{{ score.dd_year }}</td>
+        <td>{{ score.dd_all }}</td>
+      </tr>
+    </tbody>
+  </table>
+         </div>
+
+         <div  class="player-card">
+          <h2 class="player-name"> {{ numberOne.name }}</h2>
+        
+    <table class="score-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Sur 10 parties</th>
+        <th>Sur l'année</th>
+        <th>Hall of Fame</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Parties</th>
+        <td>{{ numberOne.played_last }}</td>
+        <td>{{ numberOne.played_year }}</td>
+        <td>{{ numberOne.played_last }}</td>
+      </tr>
+      <tr>
+        <th>Moyenne</th>
+        <td>{{ numberOne.mean_last }}</td>
+        <td>{{ numberOne.mean_year }}</td>
+        <td>{{ numberOne.mean_all }}</td>
+      </tr>
+      <tr>
+        <th>Meilleur</th>
+        <td>{{ numberOne.max_last }}</td>
+        <td>{{ numberOne.max_year }}</td>
+        <td>{{ numberOne.max_all }}</td>
+      </tr>
+      </tbody> 
+ </table> 
+        
+        
         </div>
-      </div>
-  
-      <div v-if="numberOne" class="player-card highlight">
-        <h3 class="player-name highlight-name">
-          {{ numberOne.name }}
-        </h3>
-        <p class="score-text">
-          Meilleur score : <b>{{ numberOne.score }} pts</b>
-          <small> ({{ formatDate(numberOne.timestamp) }})</small>
-        </p>
-        <p class="score-text">
-          Score moyen : <b>{{ numberOne.average }} pts</b>
-        </p>
-        <p class="score-text">
-          Parties jouées : <b>{{ numberOne.gamesPlayed }}</b>
-        </p>
-      </div>
-  
-      <p v-if="!numberOne">Aucun score enregistré.</p>
-  
+
+</div>
+
+
+
+
+
+
       <button @click="$emit('back')" class="back-button">Retour</button>
     </div>
   </template>
@@ -53,8 +155,8 @@
   import { min, max, mean, sum } from 'd3-array';
   const d3 = Object.assign({}, { min, max, mean, sum });
   
-  const bestScores = ref([]);
-  const numberOne = ref(null);
+  const stats = ref([]);
+  const numberOne = ref([]);
   
   async function fetchScores() {
     const { data, error } = await supabase
@@ -68,18 +170,22 @@
     }
     if (!data.length) return;
 
-const stats = getstats(data);
-  console.log(stats)
+const result = getstats(data);
+
+const remove = ["Number One", "Felix"];
+stats.value = result.filter(d => !remove.includes(d.name));
+numberOne.value = result.find(d => d.name === "Number One");
+
+    // Sort by mean_last
+    stats.value.sort((a, b) => b.mean_last - a.mean_last);
+
+    // Add highlight class to Number One
+    stats.value.forEach(player => {
+      player.highlight = player.name === "Number One";
+    });
    
   }
   
-//   function formatDate(timestamp) {
-//     return new Date(timestamp).toLocaleString('fr-FR', {
-//       year: 'numeric',
-//       month: 'long',
-//       day: 'numeric',
-//     });
-//   }
 
 function getTimestamps() {
   const now = new Date();
@@ -104,6 +210,25 @@ function getTimestamps() {
     septFirstLastYear: timestampSeptFirst,
     july31Next: timestampJuly31
   };
+}
+
+function medal(rank) {
+  switch (rank) {
+    case 1:
+      return "🥇";
+      break;
+    case 2:
+      return "🥈";
+      break;
+    case 3:
+      return "🥉";
+      break;
+    case 4:
+      return "🍫";
+      break;
+    default:
+      return "";
+  }
 }
 
 function streak(arr) {
@@ -133,11 +258,44 @@ function streak(arr) {
 
 function shangai(arr) {
   return arr.filter((turn) => {
-    const counts = [0, 0, 0, 0]; // index 0 à 3
+    const counts = [0, 0, 0, 0];
     turn.forEach((d) => counts[d]++);
     return counts[1] === 1 && counts[2] === 1 && counts[3] === 1;
   }).length;
 }
+
+function tt(arr) {
+  return arr.filter((turn) => {
+    const counts = [0, 0, 0, 0]; 
+    turn.forEach((d) => counts[d]++);
+    return counts[3] === 2;
+  }).length;
+}
+
+function ttt(arr) {
+  return arr.filter((turn) => {
+    const counts = [0, 0, 0, 0]; 
+    turn.forEach((d) => counts[d]++);
+    return counts[3] === 3;
+  }).length;
+}
+
+function dd(arr) {
+  return arr.filter((turn) => {
+    const counts = [0, 0, 0, 0]; 
+    turn.forEach((d) => counts[d]++);
+    return counts[2] === 2;
+  }).length;
+}
+
+function ddd(arr) {
+  return arr.filter((turn) => {
+    const counts = [0, 0, 0, 0]; 
+    turn.forEach((d) => counts[d]++);
+    return counts[2] === 3;
+  }).length;
+}
+
 
 function getstats(scores, last = 10) {
 
@@ -187,9 +345,19 @@ function getstats(scores, last = 10) {
     const min_all = Math.round(d3.min(data.map((d) => d.score)));
     const min_year = Math.round(d3.min(data_year.map((d) => d.score)));
     const min_last = Math.round(d3.min(data_last.map((d) => d.score)));
+    // Hits
+    const hits_all = d3.max(data.map((d) => JSON.parse(d.hits)).map((d) => d.flat().filter((d) => d != 0).length))
+    const hits_year = d3.max(data_year.map((d) => JSON.parse(d.hits)).map((d) => d.flat().filter((d) => d != 0).length))
+    const hits_last = d3.max(data_last.map((d) => JSON.parse(d.hits)).map((d) => d.flat().filter((d) => d != 0).length))
+    // Hits2
+    const hits2_all = d3.max(data.map((d) => JSON.parse(d.hits)).map((d) =>d3.sum(d.flat().filter((d) => d != 0))))
+    const hits2_year = d3.max(data_year.map((d) => JSON.parse(d.hits)).map((d) =>d3.sum(d.flat().filter((d) => d != 0))))
+    const hits2_last = d3.max(data_last.map((d) => JSON.parse(d.hits)).map((d) =>d3.sum(d.flat().filter((d) => d != 0))))
+    // Best Hits
+    const hitbest_all = d3.max(data.map((d,i) => d3.max(JSON.parse(d.hits).map((d,i) => d3.sum(d) * (i+1)))))
+    const hitbest_year = d3.max(data_year.map((d,i) => d3.max(JSON.parse(d.hits).map((d,i) => d3.sum(d) * (i+1)))))
+    const hitbest_last = d3.max(data_last.map((d,i) => d3.max(JSON.parse(d.hits).map((d,i) => d3.sum(d) * (i+1)))))
     // Streak
-
-    
     const streak_all = d3.max(
       data.map((d) => JSON.parse(d.hits).flat()).map((d) => streak(d))
     );
@@ -201,25 +369,28 @@ function getstats(scores, last = 10) {
     );
 
     // Shangai
-    const shangai_all = d3.sum(data.map((d) => shangai(JSON.parse(d.hits))));
-    const shangai_pct_all =
-      Math.round(10 * (shangai_all / data.length) * 100) / 10;
-    const shangai_year = d3.sum(data_year.map((d) => shangai(JSON.parse(d.hits))));
-    const shangai_pct_year =
-      Math.round(10 * (shangai_year / data.length) * 100) / 10;
-    const shangai_last = d3.sum(data_last.map((d) => shangai(JSON.parse(d.hits))));
-    const shangai_pct_last =
-      Math.round(10 * (shangai_last / data.length) * 100) / 10;
+    const shanghai_all = d3.sum(data.map((d) => shangai(JSON.parse(d.hits))));
+    const shanghai_year = d3.sum(data_year.map((d) => shangai(JSON.parse(d.hits))));
+    const shanghai_last = d3.sum(data_last.map((d) => shangai(JSON.parse(d.hits))));
 
-    // ttt
-    // ddd
-    // tt
-    // dd
-    // win
+    // tt, ttt, dd, ddd
+    const tt_all = d3.sum(data.map((d) => tt(JSON.parse(d.hits))));
+    const tt_year = d3.sum(data_year.map((d) => tt(JSON.parse(d.hits))));
+    const tt_last = d3.sum(data_last.map((d) => tt(JSON.parse(d.hits))));
+    const ttt_all = d3.sum(data.map((d) => ttt(JSON.parse(d.hits))));
+    const ttt_year = d3.sum(data_year.map((d) => ttt(JSON.parse(d.hits))));
+    const ttt_last = d3.sum(data_last.map((d) => ttt(JSON.parse(d.hits))));
+
+    const dd_all = d3.sum(data.map((d) => dd(JSON.parse(d.hits))));
+    const dd_year = d3.sum(data_year.map((d) => dd(JSON.parse(d.hits))));
+    const dd_last = d3.sum(data_last.map((d) => dd(JSON.parse(d.hits))));
+    const ddd_all = d3.sum(data.map((d) => ddd(JSON.parse(d.hits))));
+    const ddd_year = d3.sum(data_year.map((d) => ddd(JSON.parse(d.hits))));
+    const ddd_last = d3.sum(data_last.map((d) => ddd(JSON.parse(d.hits))));
+
 
     return {
       ...d,
-      // all
       played_all,
       mean_all_raw,
       mean_all,
@@ -227,9 +398,7 @@ function getstats(scores, last = 10) {
       min_all,
      streak_all,
     assiduity_all,
-      shangai_all,
-      shangai_pct_all,
-      // year
+      shanghai_all,
       played_year,
       mean_year_raw,
       mean_year,
@@ -237,30 +406,103 @@ function getstats(scores, last = 10) {
       min_year,
      streak_year,
     assiduity_year,
-      shangai_year,
-      shangai_pct_year,
-      // Last
+      shanghai_year,
       played_last,
       mean_last_raw,
       mean_last,
       max_last,
       min_last,
     streak_last,
-      shangai_last,
-      shangai_pct_last
+      shanghai_last,
+      hits_all,
+      hits_year,
+      hits_last,
+      hits2_all,
+      hits2_year,
+      hits2_last,
+      hitbest_all,
+      hitbest_year,
+      hitbest_last,
+      tt_all,
+      tt_year,
+      tt_last,
+      ttt_all,
+      ttt_year,
+      ttt_last,
+      dd_all,
+      dd_year,
+      dd_last,
+      ddd_all,
+      ddd_year,
+      ddd_last,
     };
   });
 
-  // Rank
+  // Rank & medals
   players = [...players]
+    .sort((a, b) => b["max_all"] - a["max_all"])
+    .map((d, i) => ({ ...d, medal_max_all: medal(i) }));
+    players = [...players]
+    .sort((a, b) => b["max_year"] - a["max_year"])
+    .map((d, i) => ({ ...d, medal_max_year: medal(i) }));
+     players = [...players]
+    .sort((a, b) => b["max_last"] - a["max_last"])
+    .map((d, i) => ({ ...d, medal_max_last: medal(i) }));
+    players = [...players]
+    .sort((a, b) => b["streak_all"] - a["streak_all"])
+    .map((d, i) => ({ ...d, medal_streak_all: medal(i) }));
+    players = [...players]
+    .sort((a, b) => b["streak_year"] - a["streak_year"])
+    .map((d, i) => ({ ...d, medal_streak_year: medal(i) }));
+     players = [...players]
+    .sort((a, b) => b["streak_last"] - a["streak_last"])
+    .map((d, i) => ({ ...d, medal_streak_last: medal(i) }));
+
+    players = [...players]
+    .sort((a, b) => b["hits_all"] - a["hits_all"])
+    .map((d, i) => ({ ...d, medal_hits_all: medal(i) }));
+    players = [...players]
+    .sort((a, b) => b["hits_year"] - a["hits_year"])
+    .map((d, i) => ({ ...d, medal_hits_year: medal(i) }));
+     players = [...players]
+    .sort((a, b) => b["hits_last"] - a["hits_last"])
+    .map((d, i) => ({ ...d, medal_hits_last: medal(i) }));
+
+
+
+    players = [...players]
+    .sort((a, b) => b["hitbest_all"] - a["hitbest_all"])
+    .map((d, i) => ({ ...d, medal_hitbest_all: medal(i) }));
+    players = [...players]
+    .sort((a, b) => b["hitbest_year"] - a["hitbest_year"])
+    .map((d, i) => ({ ...d, medal_hitbest_year: medal(i) }));
+     players = [...players]
+    .sort((a, b) => b["hitbest_last"] - a["hitbest_last"])
+    .map((d, i) => ({ ...d, medal_hitbest_last: medal(i) }));
+
+
+
+    players = [...players]
+    .sort((a, b) => b["hits2_all"] - a["hits2_all"])
+    .map((d, i) => ({ ...d, medal_hits2_all: medal(i) }));
+    players = [...players]
+    .sort((a, b) => b["hits2_year"] - a["hits2_year"])
+    .map((d, i) => ({ ...d, medal_hits2_year: medal(i) }));
+     players = [...players]
+    .sort((a, b) => b["hits2_last"] - a["hits2_last"])
+    .map((d, i) => ({ ...d, medal_hits2_last: medal(i) }));
+ 
+  
+    players = [...players]
     .sort((a, b) => b["mean_all_raw"] - a["mean_all_raw"])
-    .map((d, i) => ({ ...d, rank_all: i }));
+    .map((d, i) => ({ ...d, medal_mean_all: medal(i) }));
   players = [...players]
     .sort((a, b) => b["mean_year_raw"] - a["mean_year_raw"])
-    .map((d, i) => ({ ...d, rank_year: i }));
-  players = [...players]
+    .map((d, i) => ({ ...d, medal_mean_year: medal(i) }));
+  // Final sorting
+    players = [...players]
     .sort((a, b) => b["mean_last_raw"] - a["mean_last_raw"])
-    .map((d, i) => ({ ...d, rank_last: i }));
+    .map((d, i) => ({ ...d, medal_mean_last: medal(i) }));
 
   // Output
   return players;
@@ -283,7 +525,7 @@ function getstats(scores, last = 10) {
     padding: 1rem 1.5rem;
     color: #13171F;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    text-align: left;
+    text-align: center;
     min-height: 100vh;
     box-sizing: border-box;
   }
@@ -337,6 +579,7 @@ function getstats(scores, last = 10) {
     align-items: center;
     gap: 0.5rem;
     color: #13171F;
+
   }
   
   .highlight-name {
@@ -368,13 +611,22 @@ function getstats(scores, last = 10) {
   }
   
   .score-text {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     margin: 0.18rem 0;
     color: #13171F;
   }
+
+  .score-table {
+  width: 100%;
+  max-width: 100%;
+  font-size: 0.65rem;
+  background-color: #fff;
+  table-layout: fixed;
+
+}
   
   .score-text small {
-    font-size: 0.75rem;
+    font-size: 0.60rem;
     color: #555;
   }
   
