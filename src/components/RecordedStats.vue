@@ -93,6 +93,18 @@
         <td>{{ score.hitbest_all }} {{ score.medal_hitbest_last }}</td>
       </tr>
       <tr>
+        <th>Triples</th>
+        <td>{{ score.triple_last }} %  {{ score.medal_triple_last }}</td>
+        <td>{{ score.triple_year }} % {{ score.medal_triple_year }}</td>
+        <td>{{ score.triple_all }} % {{ score.medal_triple_all }}</td>
+      </tr>
+      <tr>
+        <th>Doubles</th>
+        <td>{{ score.double_last }} % {{ score.medal_double_last }}</td>
+        <td>{{ score.double_year }} % {{ score.medal_double_year }}</td>
+        <td>{{ score.double_all }} % {{ score.medal_double_all }}</td>
+      </tr>
+      <tr>
         <th>Shanghai</th>
         <td>{{ score.shanghai_last }}</td>
         <td>{{ score.shanghai_year }}</td>
@@ -338,32 +350,7 @@ function getstats(scores, last = 10) {
     const data_year = scores_year.filter((e) => e.name == d.name);
     const data_last =   data.slice().sort((a, b) => d3.ascending(a.timestamp, b.timestamp)).slice(-last);
 
-// TEST
-const tmp = data.map((d) => {
-      return {
-        name: d.name,
-        score: d.score,
-      };
-    });
-
-
-  
-
-const test = tmp.filter(d => d.name == "Louis CLXXX")
-console.log(test)
-
-const test2 = data_last.filter(d => d.name == "Louis CLXXX")
-console.log(test.slice(-last))
-console.log(test2)
-
-
-// FIN TEST
-
-
-
-
-
-    // Played
+   // Played
     const played_all = data.length;
     const played_year = data_year.length;
     const played_last = data_last.length;
@@ -412,6 +399,16 @@ console.log(test2)
     const streak_last = d3.max(
       data_last.map((d) => JSON.parse(d.hits).flat()).map((d) => streak(d))
     );
+
+  // triple
+    const triple_all = Math.round(data.map(d => (JSON.parse(d.hits))).flat(2).filter((d) => d == 3).length/played_all * 10)/10
+    const triple_year = Math.round(data_year.map(d => (JSON.parse(d.hits))).flat(2).filter((d) => d == 3).length/played_year * 10)/10
+    const triple_last = Math.round(data_last.map(d => (JSON.parse(d.hits))).flat(2).filter((d) => d == 3).length/played_last * 10)/10
+   
+  // double
+    const double_all = Math.round(data.map(d => (JSON.parse(d.hits))).flat(2).filter((d) => d == 2).length/played_all * 10)/10
+    const double_year = Math.round(data_year.map(d => (JSON.parse(d.hits))).flat(2).filter((d) => d == 2).length/played_year * 10)/10
+    const double_last = Math.round(data_last.map(d => (JSON.parse(d.hits))).flat(2).filter((d) => d == 2).length/played_last * 10)/10
 
     // Shangai
     const shanghai_all = d3.sum(data.map((d) => shangai(JSON.parse(d.hits))));
@@ -483,6 +480,12 @@ console.log(test2)
       cumul_all,
       cumul_year,
       cumul_last,
+      triple_all,
+      triple_year,
+      triple_last,
+      double_all,
+      double_year,
+      double_last,   
     };
   });
 
@@ -552,6 +555,28 @@ console.log(test2)
      players = [...players]
     .sort((a, b) => b["hits2_last"] - a["hits2_last"])
     .map((d, i) => ({ ...d, medal_hits2_last: medal(i) }));
+
+
+    players = [...players]
+    .sort((a, b) => b["triple_all"] - a["triple_all"])
+    .map((d, i) => ({ ...d, medal_triple_all: medal(i) }));
+    players = [...players]
+    .sort((a, b) => b["triple_year"] - a["triple_year"])
+    .map((d, i) => ({ ...d, medal_triple_year: medal(i) }));
+     players = [...players]
+    .sort((a, b) => b["triple_last"] - a["triple_last"])
+    .map((d, i) => ({ ...d, medal_triple_last: medal(i) }));
+
+
+    players = [...players]
+    .sort((a, b) => b["double_all"] - a["double_all"])
+    .map((d, i) => ({ ...d, medal_double_all: medal(i) }));
+    players = [...players]
+    .sort((a, b) => b["double_year"] - a["double_year"])
+    .map((d, i) => ({ ...d, medal_double_year: medal(i) }));
+     players = [...players]
+    .sort((a, b) => b["double_last"] - a["double_last"])
+    .map((d, i) => ({ ...d, medal_double_last: medal(i) }));
  
   
     players = [...players]
