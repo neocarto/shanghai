@@ -16,7 +16,7 @@
 
   <!-- Texte sur la marche 3 -->
   <div class="podium-text text-3">{{ stats[2].name }}<span style="font-size: 0.5rem;"> ({{ stats[2].mean_last }})</span></div>
-  <div class="podium-text text-4">chocolat : {{ stats[3].name }} ({{ stats[3].mean_last }})</div>
+  <div class="podium-text text-4">Chocolat : {{ stats[3].name }} ({{ stats[3].mean_last }})</div>
 </div>
 
   
@@ -72,7 +72,7 @@
         <th>Streak</th>
         <td>{{ score.streak_last }} {{ score.medal_streak_last }} </td>
         <td>{{ score.streak_year }} {{ score.medal_streak_year }} </td>
-        <td>{{ score.streak_all }} {{ score.medal_streak_alll }} </td>
+        <td>{{ score.streak_all }} {{ score.medal_streak_all }} </td>
       </tr>
       <tr>
         <th>Hits <small>(60)</small></th>
