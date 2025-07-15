@@ -9,14 +9,16 @@
   <img src="/img/podium.webp" alt="Podium" class="podium-image" />
 
   <!-- Texte sur la marche 1 -->
-  <div class="podium-text text-1">{{ stats[0].name }}</div>
+  <div class="podium-text text-1">{{ stats[0].name }}<span style="font-size: 0.5rem;"> ({{ stats[0].mean_last }})</span></div>
 
   <!-- Texte sur la marche 2 -->
-  <div class="podium-text text-2">{{ stats[1].name }}</div>
+  <div class="podium-text text-2">{{ stats[1].name }}<span style="font-size: 0.5rem;"> ({{ stats[1].mean_last }})</span></div>
 
   <!-- Texte sur la marche 3 -->
-  <div class="podium-text text-3">{{ stats[2].name }}</div>
+  <div class="podium-text text-3">{{ stats[2].name }}<span style="font-size: 0.5rem;"> ({{ stats[2].mean_last }})</span></div>
+  <div class="podium-text text-4">chocolat : {{ stats[3].name }} ({{ stats[3].mean_last }})</div>
 </div>
+
   
       <div v-if="stats.length" class="players-list">
         <div v-for="(score, index) in stats" :key="index" class="player-card">
@@ -52,6 +54,12 @@
         <td>{{ score.mean_last }} {{ score.medal_mean_last }} </td>
         <td>{{ score.mean_year }} {{ score.medal_mean_year }} </td>
         <td>{{ score.mean_all }} {{ score.medal_mean_all }} </td>
+      </tr>
+      <tr>
+        <th>Cumul</th>
+        <td>{{ Math.round(score.cumul_last/100)/10 + "K" }} {{ score.medal_cumul_last }} </td>
+        <td>{{ Math.round(score.cumul_year/100)/10 + "K"  }} {{ score.medal_cumul_year }} </td>
+        <td>{{ Math.round(score.cumul_all/100)/10 + "K"  }} {{ score.medal_cumul_all }} </td>
       </tr>
       <tr>
         <th>Meilleur</th>
@@ -169,12 +177,11 @@
   <script setup>
   import { ref, onMounted } from 'vue';
   import { supabase } from '../supabase';
-  import { min, max, mean, sum } from 'd3-array';
-  const d3 = Object.assign({}, { min, max, mean, sum });
+  import { min, max, mean, sum, ascending } from 'd3-array';
+  const d3 = Object.assign({}, { min, max, mean, sum, ascending });
   
   const stats = ref([]);
   const numberOne = ref([]);
-  const podium = ref(null);
   
   async function fetchScores() {
     const { data, error } = await supabase
@@ -194,14 +201,7 @@ const remove = ["Number One", "Felix"];
 stats.value = result.filter(d => !remove.includes(d.name));
 numberOne.value = result.find(d => d.name === "Number One");
 
-    // Sort by mean_last
-    stats.value.sort((a, b) => b.mean_last - a.mean_last);
-
-    // Add highlight class to Number One
-    stats.value.forEach(player => {
-      player.highlight = player.name === "Number One";
-    });
-   
+  
   }
   
 
@@ -318,9 +318,6 @@ function ddd(arr) {
 function getstats(scores, last = 10) {
 
 
-
-
-
   // Players
   let players = [...new Set(scores.map((d) => d.name))].map((name) => ({
     name
@@ -339,7 +336,32 @@ function getstats(scores, last = 10) {
   players = players.map((d) => {
     const data = scores.filter((e) => e.name == d.name);
     const data_year = scores_year.filter((e) => e.name == d.name);
-    const data_last = data.slice(-last);
+    const data_last =   data.slice().sort((a, b) => d3.ascending(a.timestamp, b.timestamp)).slice(-last);
+
+// TEST
+const tmp = data.map((d) => {
+      return {
+        name: d.name,
+        score: d.score,
+      };
+    });
+
+
+  
+
+const test = tmp.filter(d => d.name == "Louis CLXXX")
+console.log(test)
+
+const test2 = data_last.filter(d => d.name == "Louis CLXXX")
+console.log(test.slice(-last))
+console.log(test2)
+
+
+// FIN TEST
+
+
+
+
 
     // Played
     const played_all = data.length;
@@ -359,6 +381,11 @@ function getstats(scores, last = 10) {
     const max_all = Math.round(d3.max(data.map((d) => d.score)));
     const max_year = Math.round(d3.max(data_year.map((d) => d.score)));
     const max_last = Math.round(d3.max(data_last.map((d) => d.score)));
+
+     // Cumul
+    const cumul_all = Math.round(d3.sum(data.map((d) => d.score)))
+    const cumul_year = Math.round(d3.sum(data_year.map((d) => d.score)));
+    const cumul_last = Math.round(d3.sum(data_last.map((d) => d.score)));
     // Worst
     const min_all = Math.round(d3.min(data.map((d) => d.score)));
     const min_year = Math.round(d3.min(data_year.map((d) => d.score)));
@@ -453,6 +480,9 @@ function getstats(scores, last = 10) {
       ddd_all,
       ddd_year,
       ddd_last,
+      cumul_all,
+      cumul_year,
+      cumul_last,
     };
   });
 
@@ -466,6 +496,19 @@ function getstats(scores, last = 10) {
      players = [...players]
     .sort((a, b) => b["max_last"] - a["max_last"])
     .map((d, i) => ({ ...d, medal_max_last: medal(i) }));
+
+    players = [...players]
+    .sort((a, b) => b["cumul_all"] - a["cumul_all"])
+    .map((d, i) => ({ ...d, medal_cumul_all: medal(i) }));
+    players = [...players]
+    .sort((a, b) => b["cumul_year"] - a["cumul_year"])
+    .map((d, i) => ({ ...d, medal_cumul_year: medal(i) }));
+     players = [...players]
+    .sort((a, b) => b["cumul_last"] - a["cumul_last"])
+    .map((d, i) => ({ ...d, medal_cumul_last: medal(i) }));
+
+
+
     players = [...players]
     .sort((a, b) => b["streak_all"] - a["streak_all"])
     .map((d, i) => ({ ...d, medal_streak_all: medal(i) }));
@@ -582,6 +625,15 @@ function getstats(scores, last = 10) {
   top: 120px;    
   left: 83%;
   transform: translateX(-50%);
+}
+
+.text-4 {
+  font-size: 0.5rem;
+  position: absolute;      /* Assure-toi que c'est bien positionné */
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
 }
 
   
