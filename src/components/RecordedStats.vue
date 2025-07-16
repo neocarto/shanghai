@@ -44,6 +44,12 @@
         <td>{{ score.played_all }}</td>
       </tr>
       <tr>
+        <th>Win</th>
+        <td>{{ Math.round(score.win_last * 10)/10 }} %</td>
+        <td>{{ Math.round(score.win_year * 10)/10 }} %</td>
+        <td>{{ Math.round(score.win_all * 10)/10 }}  %</td>
+      </tr>
+      <tr>
         <th>Assiduité</th>
         <td>-</td>
         <td>{{ score.assiduity_year }} %</td>
@@ -67,7 +73,6 @@
         <td>{{ score.max_year }} {{ score.medal_max_year }} </td>
         <td>{{ score.max_all }} {{ score.medal_max_all }} </td>
       </tr>
-
       <tr>
         <th>Streak</th>
         <td>{{ score.streak_last }} {{ score.medal_streak_last }} </td>
@@ -179,9 +184,6 @@
 
 
 
-
-
-
       <button @click="$emit('back')" class="back-button">Retour</button>
     </div>
   </template>
@@ -189,8 +191,8 @@
   <script setup>
   import { ref, onMounted } from 'vue';
   import { supabase } from '../supabase';
-  import { min, max, mean, sum, ascending } from 'd3-array';
-  const d3 = Object.assign({}, { min, max, mean, sum, ascending });
+  import { min, max, mean, sum, ascending, descending } from 'd3-array';
+  const d3 = Object.assign({}, { min, max, mean, sum, ascending, descending });
   
   const stats = ref([]);
   const numberOne = ref([]);
@@ -209,7 +211,7 @@
 
 const result = getstats(data);
 
-const remove = ["Number One", "Felix"];
+const remove = ["Number One", "Felix", "Dart Punk"];
 stats.value = result.filter(d => !remove.includes(d.name));
 numberOne.value = result.find(d => d.name === "Number One");
 
@@ -326,6 +328,27 @@ function ddd(arr) {
   }).length;
 }
 
+function win(player, data, scores) {
+  let parties = scores
+    .filter((d) => data.map((e) => e.timestamp).includes(d.timestamp))
+    .map((d) => ({ timestamp: d.timestamp, name: d.name, score: d.score }));
+  //return parties;
+  let count = 0;
+  data
+    .map((d) => d.timestamp)
+    .forEach((d) => {
+      const winner = parties
+        .filter((e) => e.timestamp == d)
+        .slice()
+        .sort((a, b) => d3.descending(a.score, b.score))
+        .map((d) => d)[1].name;
+      if (winner == player) {
+        count++;
+      }
+    });
+  return count/data.length * 100;
+}
+
 
 function getstats(scores, last = 10) {
 
@@ -349,6 +372,15 @@ function getstats(scores, last = 10) {
     const data = scores.filter((e) => e.name == d.name);
     const data_year = scores_year.filter((e) => e.name == d.name);
     const data_last =   data.slice().sort((a, b) => d3.ascending(a.timestamp, b.timestamp)).slice(-last);
+
+
+
+    // Win
+ const playerName = d.name;
+const win_all =  win( playerName, data, scores)
+const win_year =  win( playerName, data_year, scores)
+const win_last =  win( playerName, data_last, scores)
+
 
    // Played
     const played_all = data.length;
@@ -485,7 +517,10 @@ function getstats(scores, last = 10) {
       triple_last,
       double_all,
       double_year,
-      double_last,   
+      double_last,
+      win_all,
+      win_year,
+      win_last,      
     };
   });
 
@@ -521,6 +556,8 @@ function getstats(scores, last = 10) {
      players = [...players]
     .sort((a, b) => b["streak_last"] - a["streak_last"])
     .map((d, i) => ({ ...d, medal_streak_last: medal(i) }));
+
+
 
     players = [...players]
     .sort((a, b) => b["hits_all"] - a["hits_all"])
