@@ -26,6 +26,8 @@
             {{ score.medal_mean_last }}
             {{ score.name }} - <small>{{ score.mean_last}} pts</small>
           </h2>
+<div class = "last-scores">{{score.data_last}}</div>
+
 
           <table class="score-table">
     <thead>
@@ -520,7 +522,8 @@ const win_last =  win( playerName, data_last, scores)
       double_last,
       win_all,
       win_year,
-      win_last,      
+      win_last,  
+      data_last : data_last.map(d => d.score)    
     };
   });
 
@@ -838,5 +841,14 @@ const win_last =  win( playerName, data_last, scores)
       font-size: 1.2rem;
     }
   }
+
+
+  .last-scores {
+  width: 100%;
+  max-width: 100%;
+  font-size: 0.70rem;
+  padding-bottom: 10px;
+
+}
   </style>
   
