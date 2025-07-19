@@ -279,7 +279,7 @@ function convertToTableString(data) {
     // Ligne avec les 10 scores
     if (player.scores && player.scores.length) {
       const scores = player.scores.join(', ');
-      html += `<tr><td colspan="2" style="font-size: 0.65em; color: #666;">${scores}</td></tr>`;
+      html += `<tr><td colspan="2" style="font-size: 0.75em; color: #666;">${scores}</td></tr>`;
     }
   });
   html += '</tbody>';
@@ -737,7 +737,7 @@ const win_last =  win( playerName, data_last, scores)
 }
   
   .score-text small {
-    font-size: 0.60rem;
+    font-size: 0.75rem;
     color: #555;
   }
   
