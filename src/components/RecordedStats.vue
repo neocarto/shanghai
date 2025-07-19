@@ -5,6 +5,10 @@
 
 
     <div class="scores-page">
+  
+  
+  <h1><ins>Classement</ins></h1>
+  
       <div class="podium" v-if="stats.length >= 3" style="position: relative; display: inline-block;">
   <img src="/img/podium.webp" alt="Podium" class="podium-image" />
 
@@ -19,14 +23,31 @@
   <div class="podium-text text-4">Chocolat : {{ stats[3].name }} ({{ stats[3].mean_last }})</div>
 </div>
 
+<h1><ins>Classement de la saison</ins></h1>
+<p>Moyenne des 10 meilleurs scores</p>
+
+
+
   
       <div v-if="stats.length" class="players-list">
+
+
+        <div v-html="convertToTableString(rank)"></div>
+
+        <h1><ins>Fiches individuelles</ins></h1>
+
+
         <div v-for="(score, index) in stats" :key="index" class="player-card">
           <h2 class="player-name">
             {{ score.medal_mean_last }}
             {{ score.name }} - <small>{{ score.mean_last}} pts</small>
           </h2>
-<div class = "last-scores">{{score.data_last}}</div>
+
+
+
+          <div class = "last-scores">{{score.data_last}}</div>
+
+
 
 
           <table class="score-table">
@@ -178,8 +199,8 @@
       </tr>
       </tbody> 
  </table> 
-        
-        
+
+      
         </div>
 
 </div>
@@ -198,6 +219,7 @@
   
   const stats = ref([]);
   const numberOne = ref([]);
+  const rank = ref([]);
   
   async function fetchScores() {
     const { data, error } = await supabase
@@ -212,6 +234,10 @@
     if (!data.length) return;
 
 const result = getstats(data);
+const intervall = getTimestamps();
+rank.value = getBest10(data.filter((d) => d.timestamp >= intervall.septFirstLastYear)   .filter((d) => d.timestamp <= intervall.july31Next))
+ 
+
 
 const remove = ["Number One", "Felix", "Dart Punk"];
 stats.value = result.filter(d => !remove.includes(d.name));
@@ -350,6 +376,43 @@ function win(player, data, scores) {
     });
   return count/data.length * 100;
 }
+
+function getBest10(scores) {
+  const players = [...new Set(scores.map((d) => d.name))];
+  let best10 = [];
+  players.forEach((d) => {
+    const arr = scores
+      .filter((e) => e.name == d)
+      .map((d) => d.score)
+      .sort((a, b) => b - a)
+      .slice(0, 10);
+    best10.push({ name: d, scores: arr, mean: d3.mean(arr) });
+  });
+
+  let result = best10
+    .filter((d) => d.scores.length >= 10)
+    .sort((a, b) => b.mean - a.mean);
+
+  return result.filter((d) => d.name !== "Number One");
+}
+
+function convertToTableString(data) {
+  let html = '<table>';
+
+  // En-tête
+  html += '<thead><tr><th>Nom</th><th>Moyenne</th></tr></thead>';
+
+  // Corps
+  html += '<tbody>';
+  data.forEach(player => {
+    html += `<tr><td>${player.name}</td><td>${player.mean}</td></tr>`;
+  });
+  html += '</tbody>';
+
+  html += '</table>';
+  return html;
+}
+
 
 
 function getstats(scores, last = 10) {
@@ -808,7 +871,13 @@ const win_last =  win( playerName, data_last, scores)
   padding: 0.55rem 1.4rem;
   background-color: #0288d1;
   color: white;
-  font-weight: 600;
+  font-weight: 609	408	405	400	460.8
+Robull	507	493	478	473	465	418	418	417	405	404	447.8
+Dart Simpson	502	444	434	427	423	412	410	398	381	364	419.5
+Darts Vador	453	434	433	417	394	392	385	351	327	319	390.5
+Angelo	385	383	379	290	287	285	278	278	268	255	308.8
+Cramomille	330	310	266	256	254	241	207	191	183	174	241.2
+00;
   border: none;
   border-radius: 6px;
   cursor: pointer;
