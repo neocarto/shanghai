@@ -1,215 +1,88 @@
 <template>
+  <div class="scores-page">
+    <h1><ins>Classement</ins></h1>
+    <p>Sur les 10 dernières parties</p>
 
-
-
-
-
-    <div class="scores-page">
-  
-  
-  <h1><ins>Classement</ins></h1>
-  
-      <div class="podium" v-if="stats.length >= 3" style="position: relative; display: inline-block;">
-  <img src="/img/podium.webp" alt="Podium" class="podium-image" />
-
-  <!-- Texte sur la marche 1 -->
-  <div class="podium-text text-1">{{ stats[0].name }}<span style="font-size: 0.5rem;"> ({{ stats[0].mean_last }})</span></div>
-
-  <!-- Texte sur la marche 2 -->
-  <div class="podium-text text-2">{{ stats[1].name }}<span style="font-size: 0.5rem;"> ({{ stats[1].mean_last }})</span></div>
-
-  <!-- Texte sur la marche 3 -->
-  <div class="podium-text text-3">{{ stats[2].name }}<span style="font-size: 0.5rem;"> ({{ stats[2].mean_last }})</span></div>
-  <div class="podium-text text-4">Chocolat : {{ stats[3].name }} ({{ stats[3].mean_last }})</div>
-</div>
-
-<h1><ins>Classement de la saison</ins></h1>
-<p>Moyenne des 10 meilleurs scores</p>
-
-
-
-  
-      <div v-if="stats.length" class="players-list">
-
-
-        <div v-html="convertToTableString(rank)"></div>
-
-        <h1><ins>Fiches individuelles</ins></h1>
-
-
-        <div v-for="(score, index) in stats" :key="index" class="player-card">
-          <h2 class="player-name">
-            {{ score.medal_mean_last }}
-            {{ score.name }} - <small>{{ score.mean_last}} pts</small>
-          </h2>
-
-
-
-          <div class = "last-scores">{{score.data_last}}</div>
-
-
-
-
-          <table class="score-table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Sur 10 parties</th>
-        <th>Sur l'année</th>
-        <th>Hall of Fame</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th>Parties</th>
-        <td>{{ score.played_last }}</td>
-        <td>{{ score.played_year }}</td>
-        <td>{{ score.played_all }}</td>
-      </tr>
-      <tr>
-        <th>Win</th>
-        <td>{{ Math.round(score.win_last * 10)/10 }} %</td>
-        <td>{{ Math.round(score.win_year * 10)/10 }} %</td>
-        <td>{{ Math.round(score.win_all * 10)/10 }}  %</td>
-      </tr>
-      <tr>
-        <th>Assiduité</th>
-        <td>-</td>
-        <td>{{ score.assiduity_year }} %</td>
-        <td>{{ score.assiduity_all }} %</td>
-      </tr>
-      <tr>
-        <th>Moyenne</th>
-        <td>{{ score.mean_last }} {{ score.medal_mean_last }} </td>
-        <td>{{ score.mean_year }} {{ score.medal_mean_year }} </td>
-        <td>{{ score.mean_all }} {{ score.medal_mean_all }} </td>
-      </tr>
-      <tr>
-        <th>Cumul</th>
-        <td>{{ Math.round(score.cumul_last/100)/10 + "K" }} {{ score.medal_cumul_last }} </td>
-        <td>{{ Math.round(score.cumul_year/100)/10 + "K"  }} {{ score.medal_cumul_year }} </td>
-        <td>{{ Math.round(score.cumul_all/100)/10 + "K"  }} {{ score.medal_cumul_all }} </td>
-      </tr>
-      <tr>
-        <th>Meilleur</th>
-        <td>{{ score.max_last }} {{ score.medal_max_last }} </td>
-        <td>{{ score.max_year }} {{ score.medal_max_year }} </td>
-        <td>{{ score.max_all }} {{ score.medal_max_all }} </td>
-      </tr>
-      <tr>
-        <th>Streak</th>
-        <td>{{ score.streak_last }} {{ score.medal_streak_last }} </td>
-        <td>{{ score.streak_year }} {{ score.medal_streak_year }} </td>
-        <td>{{ score.streak_all }} {{ score.medal_streak_all }} </td>
-      </tr>
-      <tr>
-        <th>Hits <small>(60)</small></th>
-        <td>{{ score.hits_last }} {{ score.medal_hits_last }} </td>
-        <td>{{ score.hits_year }} {{ score.medal_hits_year }}  </td>
-        <td>{{ score.hits_all }} {{ score.medal_hits_all }} </td>
-      </tr>
-      <tr>
-        <th>Hits <small>(180)</small></th>
-        <td>{{ score.hits2_last }} {{ score.medal_hits2_last }}</td>
-        <td>{{ score.hits2_year }}  {{ score.medal_hits2_year }}</td>
-        <td>{{ score.hits2_all }} {{ score.medal_hits2_all }}</td>
-      </tr>
-      <tr>
-        <th>Meilleur coup</th>
-        <td>{{ score.hitbest_last }} {{ score.medal_hitbest_last }}</td>
-        <td>{{ score.hitbest_year }} {{ score.medal_hitbest_last }} </td>
-        <td>{{ score.hitbest_all }} {{ score.medal_hitbest_last }}</td>
-      </tr>
-      <tr>
-        <th>Triples</th>
-        <td>{{ score.triple_last }} %  {{ score.medal_triple_last }}</td>
-        <td>{{ score.triple_year }} % {{ score.medal_triple_year }}</td>
-        <td>{{ score.triple_all }} % {{ score.medal_triple_all }}</td>
-      </tr>
-      <tr>
-        <th>Doubles</th>
-        <td>{{ score.double_last }} % {{ score.medal_double_last }}</td>
-        <td>{{ score.double_year }} % {{ score.medal_double_year }}</td>
-        <td>{{ score.double_all }} % {{ score.medal_double_all }}</td>
-      </tr>
-      <tr>
-        <th>Shanghai</th>
-        <td>{{ score.shanghai_last }}</td>
-        <td>{{ score.shanghai_year }}</td>
-        <td>{{ score.shanghai_all }}</td>
-      </tr>
-      <tr>
-        <th>ttt</th>
-        <td>{{ score.ttt_last }}</td>
-        <td>{{ score.ttt_year }}</td>
-        <td>{{ score.ttt_all }}</td>
-      </tr>
-      <tr>
-        <th>tt</th>
-        <td>{{ score.tt_last }}</td>
-        <td>{{ score.tt_year }}</td>
-        <td>{{ score.tt_all }}</td>
-      </tr>
-      <tr>
-        <th>ddd</th>
-        <td>{{ score.ddd_last }}</td>
-        <td>{{ score.ddd_year }}</td>
-        <td>{{ score.ddd_all }}</td>
-      </tr>
-      <tr>
-        <th>dd</th>
-        <td>{{ score.dd_last }}</td>
-        <td>{{ score.dd_year }}</td>
-        <td>{{ score.dd_all }}</td>
-      </tr>
-    </tbody>
-  </table>
-         </div>
-
-         <div  class="player-card">
-          <h2 class="player-name"> {{ numberOne.name }}</h2>
-        
-    <table class="score-table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Sur 10 parties</th>
-        <th>Sur l'année</th>
-        <th>Hall of Fame</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th>Parties</th>
-        <td>{{ numberOne.played_last }}</td>
-        <td>{{ numberOne.played_year }}</td>
-        <td>{{ numberOne.played_last }}</td>
-      </tr>
-      <tr>
-        <th>Moyenne</th>
-        <td>{{ numberOne.mean_last }}</td>
-        <td>{{ numberOne.mean_year }}</td>
-        <td>{{ numberOne.mean_all }}</td>
-      </tr>
-      <tr>
-        <th>Meilleur</th>
-        <td>{{ numberOne.max_last }}</td>
-        <td>{{ numberOne.max_year }}</td>
-        <td>{{ numberOne.max_all }}</td>
-      </tr>
-      </tbody> 
- </table> 
-
-      
-        </div>
-
-</div>
-
-
-
-      <button @click="$emit('back')" class="back-button">Retour</button>
+    <div class="podium" v-if="stats.length >= 3" style="position: relative; display: inline-block;">
+      <img src="/img/podium.webp" alt="Podium" class="podium-image" />
+      <div class="podium-text text-1">{{ stats[0].name }}<span style="font-size: 0.5rem;"> ({{ stats[0].mean_last }})</span></div>
+      <div class="podium-text text-2">{{ stats[1].name }}<span style="font-size: 0.5rem;"> ({{ stats[1].mean_last }})</span></div>
+      <div class="podium-text text-3">{{ stats[2].name }}<span style="font-size: 0.5rem;"> ({{ stats[2].mean_last }})</span></div>
+      <div class="podium-text text-4">Chocolat : {{ stats[3].name }} ({{ stats[3].mean_last }})</div>
     </div>
-  </template>
+
+    <h1><ins>Classement de la saison</ins></h1>
+    <p>Moyenne des 10 meilleurs scores</p>
+
+    <div v-if="stats.length" class="players-list">
+
+      <div class="player-card" v-html="convertToTableString(rank)"></div>
+
+      <h1><ins>Fiches individuelles</ins></h1>
+
+      <div v-for="(score, index) in stats" :key="index" class="player-card">
+        <h2 class="player-name">
+          {{ score.medal_mean_last }}
+          {{ score.name }} - <small>{{ score.mean_last }} pts</small>
+        </h2>
+        <div class="last-scores">{{ score.data_last }}</div>
+
+        <table class="score-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Sur 10 parties</th>
+              <th>Sur l'année</th>
+              <th>Hall of Fame</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th>Parties</th><td>{{ score.played_last }}</td><td>{{ score.played_year }}</td><td>{{ score.played_all }}</td></tr>
+            <tr><th>Win</th><td>{{ Math.round(score.win_last * 10)/10 }} %</td><td>{{ Math.round(score.win_year * 10)/10 }} %</td><td>{{ Math.round(score.win_all * 10)/10 }} %</td></tr>
+            <tr><th>Assiduité</th><td>-</td><td>{{ score.assiduity_year }} %</td><td>{{ score.assiduity_all }} %</td></tr>
+            <tr><th>Moyenne</th><td>{{ score.mean_last }} {{ score.medal_mean_last }}</td><td>{{ score.mean_year }} {{ score.medal_mean_year }}</td><td>{{ score.mean_all }} {{ score.medal_mean_all }}</td></tr>
+            <tr><th>Cumul</th><td>{{ Math.round(score.cumul_last/100)/10 + "K" }} {{ score.medal_cumul_last }}</td><td>{{ Math.round(score.cumul_year/100)/10 + "K" }} {{ score.medal_cumul_year }}</td><td>{{ Math.round(score.cumul_all/100)/10 + "K" }} {{ score.medal_cumul_all }}</td></tr>
+            <tr><th>Meilleur</th><td>{{ score.max_last }} {{ score.medal_max_last }}</td><td>{{ score.max_year }} {{ score.medal_max_year }}</td><td>{{ score.max_all }} {{ score.medal_max_all }}</td></tr>
+            <tr><th>Streak</th><td>{{ score.streak_last }} {{ score.medal_streak_last }}</td><td>{{ score.streak_year }} {{ score.medal_streak_year }}</td><td>{{ score.streak_all }} {{ score.medal_streak_all }}</td></tr>
+            <tr><th>Hits <small>(60)</small></th><td>{{ score.hits_last }} {{ score.medal_hits_last }}</td><td>{{ score.hits_year }} {{ score.medal_hits_year }}</td><td>{{ score.hits_all }} {{ score.medal_hits_all }}</td></tr>
+            <tr><th>Hits <small>(180)</small></th><td>{{ score.hits2_last }} {{ score.medal_hits2_last }}</td><td>{{ score.hits2_year }} {{ score.medal_hits2_year }}</td><td>{{ score.hits2_all }} {{ score.medal_hits2_all }}</td></tr>
+            <tr><th>Meilleur coup</th><td>{{ score.hitbest_last }} {{ score.medal_hitbest_last }}</td><td>{{ score.hitbest_year }} {{ score.medal_hitbest_last }}</td><td>{{ score.hitbest_all }} {{ score.medal_hitbest_last }}</td></tr>
+            <tr><th>Triples</th><td>{{ score.triple_last }} % {{ score.medal_triple_last }}</td><td>{{ score.triple_year }} % {{ score.medal_triple_year }}</td><td>{{ score.triple_all }} % {{ score.medal_triple_all }}</td></tr>
+            <tr><th>Doubles</th><td>{{ score.double_last }} % {{ score.medal_double_last }}</td><td>{{ score.double_year }} % {{ score.medal_double_year }}</td><td>{{ score.double_all }} % {{ score.medal_double_all }}</td></tr>
+            <tr><th>Shanghai</th><td>{{ score.shanghai_last }}</td><td>{{ score.shanghai_year }}</td><td>{{ score.shanghai_all }}</td></tr>
+            <tr><th>ttt</th><td>{{ score.ttt_last }}</td><td>{{ score.ttt_year }}</td><td>{{ score.ttt_all }}</td></tr>
+            <tr><th>tt</th><td>{{ score.tt_last }}</td><td>{{ score.tt_year }}</td><td>{{ score.tt_all }}</td></tr>
+            <tr><th>ddd</th><td>{{ score.ddd_last }}</td><td>{{ score.ddd_year }}</td><td>{{ score.ddd_all }}</td></tr>
+            <tr><th>dd</th><td>{{ score.dd_last }}</td><td>{{ score.dd_year }}</td><td>{{ score.dd_all }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Carte spéciale pour Number One -->
+      <div class="player-card">
+        <h2 class="player-name">{{ numberOne.name }}</h2>
+        <table class="score-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Sur 10 parties</th>
+              <th>Sur l'année</th>
+              <th>Hall of Fame</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th>Parties</th><td>{{ numberOne.played_last }}</td><td>{{ numberOne.played_year }}</td><td>{{ numberOne.played_last }}</td></tr>
+            <tr><th>Moyenne</th><td>{{ numberOne.mean_last }}</td><td>{{ numberOne.mean_year }}</td><td>{{ numberOne.mean_all }}</td></tr>
+            <tr><th>Meilleur</th><td>{{ numberOne.max_last }}</td><td>{{ numberOne.max_year }}</td><td>{{ numberOne.max_all }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <button @click="$emit('back')" class="back-button">Retour</button>
+  </div>
+</template>
+
   
   <script setup>
   import { ref, onMounted } from 'vue';
@@ -398,14 +271,16 @@ function getBest10(scores) {
 
 function convertToTableString(data) {
   let html = '<table>';
-
-  // En-tête
-  html += '<thead><tr><th>Nom</th><th>Moyenne</th></tr></thead>';
-
-  // Corps
   html += '<tbody>';
-  data.forEach(player => {
-    html += `<tr><td>${player.name}</td><td>${player.mean}</td></tr>`;
+  data.forEach((player,i) => {
+    // Ligne principale avec nom et moyenne
+    html += `<tr><td>${medal(i+1)} ${player.name}</td><td>${player.mean}</td></tr>`;
+
+    // Ligne avec les 10 scores
+    if (player.scores && player.scores.length) {
+      const scores = player.scores.join(', ');
+      html += `<tr><td colspan="2" style="font-size: 0.65em; color: #666;">${scores}</td></tr>`;
+    }
   });
   html += '</tbody>';
 
@@ -708,7 +583,8 @@ const win_last =  win( playerName, data_last, scores)
   </script>
   
   <style scoped>
-  .scores-page {
+  .scores-page {  
+    align-items: center;
     max-width: 900px;
     margin: 1.5rem auto;
     padding: 1rem 1.5rem;
