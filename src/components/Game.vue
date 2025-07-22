@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
-import GameStats from './GameStats.vue'; // ajuste le chemin si besoin
+import GameStats from './GameStats.vue';
+import confetti from 'canvas-confetti'; // 🎉 Confettis
 
 // Avoid scroll on mobile
 let startY = 0;
@@ -125,8 +126,21 @@ function submitTurn() {
     darts.value = [...bestThrowOf];
    }
 
-  player.scores.push([...darts.value]);
+  const row = [...darts.value];
+  player.scores.push(row);
   player.totalScore += currentTurnScore.value;
+
+  const isShangai = new Set(row).has(1) && new Set(row).has(2) && new Set(row).has(3);
+  // 🎉 Confettis pour Shangai (joueur humain uniquement)
+  if (isShangai && player.name !== robotName) {
+    confetti({
+      particleCount: 150,
+      spread: 90,
+      origin: { y: 0.6 }
+    });
+  }
+
+
   darts.value = [0, 0, 0];
 
   if (currentPlayerIndex.value < props.players.length - 1) {
