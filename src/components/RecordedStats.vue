@@ -79,7 +79,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr><th>Parties</th><td>{{ numberOne.played_last }}</td><td>{{ numberOne.played_year }}</td><td>{{ numberOne.played_last }}</td></tr>
+            <tr><th>Parties</th><td>{{ numberOne.played_last }}</td><td>{{ numberOne.played_year }}</td><td>{{ numberOne.played_all }}</td></tr>
             <tr><th>Moyenne</th><td>{{ numberOne.mean_last }}</td><td>{{ numberOne.mean_year }}</td><td>{{ numberOne.mean_all }}</td></tr>
             <tr><th>Meilleur</th><td>{{ numberOne.max_last }}</td><td>{{ numberOne.max_year }}</td><td>{{ numberOne.max_all }}</td></tr>
           </tbody>
