@@ -17,14 +17,20 @@
           </template>
           {{ player.name }}
         </div>
+        <span class="final-player-score">{{ player.totalScore }} pts</span>
         <img :src="player.avatar" alt="avatar" class="final-avatar-large" />
+        
         <div class="final-player-info">
+          
           <div class="final-player-stats">
             <span class="stat-badge">Hits : {{ stats(player).hits }}/{{ stats(player).total }}</span>
             <span class="stat-badge">Hits (F1) : {{ stats(player).hitsF1 }}/{{ stats(player).total / 3 }}</span>
             <span class="stat-badge">Hits (F2) : {{ stats(player).hitsF2 }}/{{ stats(player).total / 3 }}</span>
             <span class="stat-badge">Hits (F3) : {{ stats(player).hitsF3 }}/{{ stats(player).total / 3 }}</span>
             <span class="stat-badge">Miss : {{ stats(player).miss }}</span>
+            <span class="stat-badge">Streak : {{ stats(player).strk }}</span>
+            <span class="stat-badge">Streak loose : {{ stats(player).strkloose }}</span>
+
             <span class="stat-badge">Single : {{ stats(player).single }}</span>
             <span class="stat-badge">Double : {{ stats(player).double }}</span>
             <span class="stat-badge">Triple : {{ stats(player).triple }}</span>
@@ -35,7 +41,7 @@
             <span v-if="stats(player).dd >= 1" class="stat-badge awsome-badge">dd : {{ stats(player).dd }}</span>
           </div>
         </div>
-        <span class="final-player-score">{{ player.totalScore }} pts</span>
+
       </li>
     </ul>
     <p><button @click="replay">Rejouer</button></p>
@@ -50,6 +56,7 @@
 </template>
 
 <script setup>
+
 
 const props = defineProps(['sortedPlayers', 'humanPlayersSorted', 'robotName', 'stats','role']);
 

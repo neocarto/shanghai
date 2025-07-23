@@ -1,6 +1,6 @@
 <template>
   <div class="scores-page">
-    <h1><ins>Classement</ins></h1>
+    <h1><ins>Classement glissant</ins></h1>
     <p>Sur les 10 dernières parties</p>
 
     <div class="podium" v-if="stats.length >= 3" style="position: relative; display: inline-block;">
@@ -9,8 +9,9 @@
       <div class="podium-text text-2">{{ stats[1].name }}<span style="font-size: 0.5rem;"> ({{ stats[1].mean_last }})</span></div>
       <div class="podium-text text-3">{{ stats[2].name }}<span style="font-size: 0.5rem;"> ({{ stats[2].mean_last }})</span></div>
       <div class="podium-text text-4">Chocolat : {{ stats[3].name }} ({{ stats[3].mean_last }})</div>
-    </div>
 
+    </div>
+<div align = "center">    <div class="player-card " v-html="convertToTableString2(stats)"></div></div>
     <h1><ins>Classement de la saison</ins></h1>
     <p>Moyenne des 10 meilleurs scores</p>
 
@@ -25,7 +26,13 @@
           {{ score.medal_mean_last }}
           {{ score.name }} - <small>{{ score.mean_last }} pts</small>
         </h2>
-        <div class="last-scores">{{ score.data_last }}</div>
+        <div class="last-scores">
+  <!-- <template v-for="(s, i) in score.data_last" :key="i">
+    <strong v-if="i === 0">{{ s }}</strong>
+    <span v-else>{{ s }}</span>
+    <span v-if="i < score.data_last.length - 1">, </span>
+  </template> -->
+</div>
 
         <table class="score-table">
           <thead>
@@ -44,6 +51,7 @@
             <tr><th>Cumul</th><td>{{ Math.round(score.cumul_last/100)/10 + "K" }} {{ score.medal_cumul_last }}</td><td>{{ Math.round(score.cumul_year/100)/10 + "K" }} {{ score.medal_cumul_year }}</td><td>{{ Math.round(score.cumul_all/100)/10 + "K" }} {{ score.medal_cumul_all }}</td></tr>
             <tr><th>Meilleur</th><td>{{ score.max_last }} {{ score.medal_max_last }}</td><td>{{ score.max_year }} {{ score.medal_max_year }}</td><td>{{ score.max_all }} {{ score.medal_max_all }}</td></tr>
             <tr><th>Streak</th><td>{{ score.streak_last }} {{ score.medal_streak_last }}</td><td>{{ score.streak_year }} {{ score.medal_streak_year }}</td><td>{{ score.streak_all }} {{ score.medal_streak_all }}</td></tr>
+            <tr><th>Streak Loose</th><td>{{ score.streakloose_last }} {{ score.medal_streakloose_last }}</td><td>{{ score.streakloose_year }} {{ score.medal_streakloose_year }}</td><td>{{ score.streakloose_all }} {{ score.medal_streakloose_all }}</td></tr>
             <tr><th>Hits <small>(60)</small></th><td>{{ score.hits_last }} {{ score.medal_hits_last }}</td><td>{{ score.hits_year }} {{ score.medal_hits_year }}</td><td>{{ score.hits_all }} {{ score.medal_hits_all }}</td></tr>
             <tr><th>Hits <small>(180)</small></th><td>{{ score.hits2_last }} {{ score.medal_hits2_last }}</td><td>{{ score.hits2_year }} {{ score.medal_hits2_year }}</td><td>{{ score.hits2_all }} {{ score.medal_hits2_all }}</td></tr>
             <tr><th>Meilleur coup</th><td>{{ score.hitbest_last }} {{ score.medal_hitbest_last }}</td><td>{{ score.hitbest_year }} {{ score.medal_hitbest_year }}</td><td>{{ score.hitbest_all }} {{ score.medal_hitbest_all }}</td></tr>
@@ -89,10 +97,12 @@
   import { supabase } from '../supabase';
   import { min, max, mean, sum, ascending, descending } from 'd3-array';
   const d3 = Object.assign({}, { min, max, mean, sum, ascending, descending });
+  import {streak, streakLoose, getTimestamps, convertToTableString, convertToTableString2, getBest10, win, shangai, tt, ttt, dd, ddd, medal} from '../helpers/computeStats';
   
   const stats = ref([]);
   const numberOne = ref([]);
   const rank = ref([]);
+
   
   async function fetchScores() {
     const { data, error } = await supabase
@@ -120,173 +130,14 @@ numberOne.value = result.find(d => d.name === "Number One");
   }
   
 
-function getTimestamps() {
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth(); // 0 = janvier
 
-  // 1er septembre dernier
-  const septFirst =
-    currentMonth >= 8
-      ? new Date(currentYear, 8, 1)
-      : new Date(currentYear - 1, 8, 1);
-  const timestampSeptFirst = septFirst.getTime();
 
-  // 31 juillet prochain
-  const july31 =
-    currentMonth <= 6
-      ? new Date(currentYear, 6, 31)
-      : new Date(currentYear + 1, 6, 31);
-  const timestampJuly31 = july31.getTime();
 
-  return {
-    septFirstLastYear: timestampSeptFirst,
-    july31Next: timestampJuly31
-  };
-}
 
-function medal(rank) {
-  switch (rank) {
-    case 1:
-      return "🥇";
-      break;
-    case 2:
-      return "🥈";
-      break;
-    case 3:
-      return "🥉";
-      break;
-    case 4:
-      return "🍫";
-      break;
-    default:
-      return "";
-  }
-}
 
-function streak(arr) {
-  arr = arr.flat();
-  let maxLength = 0;
-  let currentLength = 0;
-  let startIndexMax = -1;
-  let startIndexCurrent = 0;
 
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] !== 0) {
-      if (currentLength === 0) {
-        startIndexCurrent = i;
-      }
-      currentLength++;
-      if (currentLength > maxLength) {
-        maxLength = currentLength;
-        startIndexMax = startIndexCurrent;
-      }
-    } else {
-      currentLength = 0;
-    }
-  }
 
-  return maxLength;
-}
 
-function shangai(arr) {
-  return arr.filter((turn) => {
-    const counts = [0, 0, 0, 0];
-    turn.forEach((d) => counts[d]++);
-    return counts[1] === 1 && counts[2] === 1 && counts[3] === 1;
-  }).length;
-}
-
-function tt(arr) {
-  return arr.filter((turn) => {
-    const counts = [0, 0, 0, 0]; 
-    turn.forEach((d) => counts[d]++);
-    return counts[3] === 2;
-  }).length;
-}
-
-function ttt(arr) {
-  return arr.filter((turn) => {
-    const counts = [0, 0, 0, 0]; 
-    turn.forEach((d) => counts[d]++);
-    return counts[3] === 3;
-  }).length;
-}
-
-function dd(arr) {
-  return arr.filter((turn) => {
-    const counts = [0, 0, 0, 0]; 
-    turn.forEach((d) => counts[d]++);
-    return counts[2] === 2;
-  }).length;
-}
-
-function ddd(arr) {
-  return arr.filter((turn) => {
-    const counts = [0, 0, 0, 0]; 
-    turn.forEach((d) => counts[d]++);
-    return counts[2] === 3;
-  }).length;
-}
-
-function win(player, data, scores) {
-  let parties = scores
-    .filter((d) => data.map((e) => e.timestamp).includes(d.timestamp))
-    .map((d) => ({ timestamp: d.timestamp, name: d.name, score: d.score }));
-  //return parties;
-  let count = 0;
-  data
-    .map((d) => d.timestamp)
-    .forEach((d) => {
-      const winner = parties
-        .filter((e) => e.timestamp == d)
-        .slice()
-        .sort((a, b) => d3.descending(a.score, b.score))
-        .map((d) => d)[1].name;
-      if (winner == player) {
-        count++;
-      }
-    });
-  return count/data.length * 100;
-}
-
-function getBest10(scores) {
-  const players = [...new Set(scores.map((d) => d.name))];
-  let best10 = [];
-  players.forEach((d) => {
-    const arr = scores
-      .filter((e) => e.name == d)
-      .map((d) => d.score)
-      .sort((a, b) => b - a)
-      .slice(0, 10);
-    best10.push({ name: d, scores: arr, mean: d3.mean(arr) });
-  });
-
-  let result = best10
-    .filter((d) => d.scores.length >= 10)
-    .sort((a, b) => b.mean - a.mean);
-
-  return result.filter((d) => d.name !== "Number One");
-}
-
-function convertToTableString(data) {
-  let html = '<table>';
-  html += '<tbody>';
-  data.forEach((player,i) => {
-    // Ligne principale avec nom et moyenne
-    html += `<tr><td>${medal(i+1)} ${player.name}</td><td>${player.mean}</td></tr>`;
-
-    // Ligne avec les 10 scores
-    if (player.scores && player.scores.length) {
-      const scores = player.scores.join(', ');
-      html += `<tr><td colspan="2" style="font-size: 0.75em; color: #666;">${scores}</td></tr>`;
-    }
-  });
-  html += '</tbody>';
-
-  html += '</table>';
-  return html;
-}
 
 
 
@@ -370,6 +221,17 @@ const win_last =  win( playerName, data_last, scores)
     );
     const streak_last = d3.max(
       data_last.map((d) => JSON.parse(d.hits).flat()).map((d) => streak(d))
+    );
+
+        // StreakLoose
+        const streakloose_all = d3.max(
+      data.map((d) => JSON.parse(d.hits).flat()).map((d) => streakLoose(d))
+    );
+    const streakloose_year = d3.max(
+      data_year.map((d) => JSON.parse(d.hits).flat()).map((d) => streakLoose(d))
+    );
+    const streakloose_last = d3.max(
+      data_last.map((d) => JSON.parse(d.hits).flat()).map((d) => streakLoose(d))
     );
 
   // triple
@@ -461,7 +323,10 @@ const win_last =  win( playerName, data_last, scores)
       win_all,
       win_year,
       win_last,  
-      data_last : data_last.map(d => d.score)    
+      data_last : data_last.map(d => d.score),
+      streakloose_all,
+      streakloose_year,
+      streakloose_last, 
     };
   });
 
@@ -498,6 +363,15 @@ const win_last =  win( playerName, data_last, scores)
     .sort((a, b) => b["streak_last"] - a["streak_last"])
     .map((d, i) => ({ ...d, medal_streak_last: medal(i) }));
 
+    players = [...players]
+    .sort((a, b) => b["streakloose_all"] - a["streakloose_all"])
+    .map((d, i) => ({ ...d, medal_streakloose_all: medal(i) }));
+    players = [...players]
+    .sort((a, b) => b["streakloose_year"] - a["streakloose_year"])
+    .map((d, i) => ({ ...d, medal_streakloose_year: medal(i) }));
+     players = [...players]
+    .sort((a, b) => b["streakloose_last"] - a["streakloose_last"])
+    .map((d, i) => ({ ...d, medal_streakloose_last: medal(i) }));
 
 
     players = [...players]

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from 'vue';
 import GameStats from './GameStats.vue';
+import {streak, streakLoose} from '../helpers/computeStats';
 import confetti from 'canvas-confetti'; // 🎉 Confettis
 
 // Avoid scroll on mobile
@@ -77,7 +78,10 @@ props.players.forEach(player => {
 function stats(player) {
 // Record
   // Display
+
   const flat = player.scores.flat();
+  const strk = streak(flat)
+  const strkloose = streakLoose(flat)
   const total = flat.length;
   const miss = flat.filter(x => x === 0).length;
   const hits = flat.filter(x => x !== 0).length;
@@ -95,7 +99,7 @@ function stats(player) {
     const set = new Set(row);
     return set.has(1) && set.has(2) && set.has(3);
   }).length;
-  return { total, hits, hitsF1, hitsF2, hitsF3, miss, single, double, triple, shangai, ttt, ddd, tt, dd };
+  return { total, hits, hitsF1, hitsF2, hitsF3, miss, single, double, triple, shangai, ttt, ddd, tt, dd , strk, strkloose };
 }
 
 function setDart(index, value) {
