@@ -46,7 +46,7 @@
             <tr><th>Streak</th><td>{{ score.streak_last }} {{ score.medal_streak_last }}</td><td>{{ score.streak_year }} {{ score.medal_streak_year }}</td><td>{{ score.streak_all }} {{ score.medal_streak_all }}</td></tr>
             <tr><th>Hits <small>(60)</small></th><td>{{ score.hits_last }} {{ score.medal_hits_last }}</td><td>{{ score.hits_year }} {{ score.medal_hits_year }}</td><td>{{ score.hits_all }} {{ score.medal_hits_all }}</td></tr>
             <tr><th>Hits <small>(180)</small></th><td>{{ score.hits2_last }} {{ score.medal_hits2_last }}</td><td>{{ score.hits2_year }} {{ score.medal_hits2_year }}</td><td>{{ score.hits2_all }} {{ score.medal_hits2_all }}</td></tr>
-            <tr><th>Meilleur coup</th><td>{{ score.hitbest_last }} {{ score.medal_hitbest_last }}</td><td>{{ score.hitbest_year }} {{ score.medal_hitbest_last }}</td><td>{{ score.hitbest_all }} {{ score.medal_hitbest_last }}</td></tr>
+            <tr><th>Meilleur coup</th><td>{{ score.hitbest_last }} {{ score.medal_hitbest_last }}</td><td>{{ score.hitbest_year }} {{ score.medal_hitbest_year }}</td><td>{{ score.hitbest_all }} {{ score.medal_hitbest_all }}</td></tr>
             <tr><th>Triples</th><td>{{ score.triple_last }} % {{ score.medal_triple_last }}</td><td>{{ score.triple_year }} % {{ score.medal_triple_year }}</td><td>{{ score.triple_all }} % {{ score.medal_triple_all }}</td></tr>
             <tr><th>Doubles</th><td>{{ score.double_last }} % {{ score.medal_double_last }}</td><td>{{ score.double_year }} % {{ score.medal_double_year }}</td><td>{{ score.double_all }} % {{ score.medal_double_all }}</td></tr>
             <tr><th>Shanghai</th><td>{{ score.shanghai_last }}</td><td>{{ score.shanghai_year }}</td><td>{{ score.shanghai_all }}</td></tr>
