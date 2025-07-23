@@ -154,6 +154,7 @@ function getstats(scores, last = 10) {
   const scores_year = scores
     .filter((d) => d.timestamp >= intervall.septFirstLastYear)
     .filter((d) => d.timestamp <= intervall.july31Next);
+
   // Total number of games
   const nb_all = scores.filter((d) => d.name == "Number One").length;
   const nb_year = scores_year.filter((d) => d.name == "Number One").length;
@@ -162,7 +163,7 @@ function getstats(scores, last = 10) {
   players = players.map((d) => {
     const data = scores.filter((e) => e.name == d.name);
     const data_year = scores_year.filter((e) => e.name == d.name);
-    const data_last =   data.slice().sort((a, b) => d3.ascending(a.timestamp, b.timestamp)).slice(-last);
+    const data_last =   data_year.slice().sort((a, b) => d3.ascending(a.timestamp, b.timestamp)).slice(-last);
 
 
 
