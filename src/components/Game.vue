@@ -71,6 +71,7 @@ watch(
 // Init scores
 props.players.forEach(player => {
   if (!player.scores) player.scores = [];
+  if (!player.curses) player.curses = 0;
   if (player.totalScore === undefined) player.totalScore = 0;
 });
 
@@ -220,8 +221,13 @@ function undoTurn() {
 }
 
 
-
-
+function countCurses() {
+  const player = props.players[currentPlayerIndex.value];
+  if(player.name !== robotName) {
+    player.curses += 1
+    console.log("Gros Mot ! ", player.name, " ", player.curses)
+  }
+}
 
 const gameOver = computed(() => currentRound.value > nb);
 
@@ -304,7 +310,8 @@ const humanPlayersSorted = computed(() =>
         </div>
 
 
-        <p v-if="props.players[currentPlayerIndex].name !== robotName">
+        <p id="emitScoreContainer" v-if="props.players[currentPlayerIndex].name !== robotName">
+          <button @click="countCurses" class="curseCounter">🤬 ! {{ props.players[currentPlayerIndex].curses }}</button>
           <button @click="submitTurn" class="validate">Valider ce tour (+{{currentTurnScore}} pts)</button>
         </p>
         <p><button @click="undoTurn" class="undo-button">&#8592;</button></p>
@@ -435,8 +442,12 @@ button.active {
   font-weight: bold;
 }
 
-.validate {
-  margin-top: 1rem;
+#emitScoreContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+
+    margin-top: 1rem;
 }
 
 .undo-button {
