@@ -100,7 +100,8 @@ function stats(player) {
     const set = new Set(row);
     return set.has(1) && set.has(2) && set.has(3);
   }).length;
-  return { total, hits, hitsF1, hitsF2, hitsF3, miss, single, double, triple, shangai, ttt, ddd, tt, dd , strk, strkloose };
+  const curses = player.curses
+  return { total, hits, hitsF1, hitsF2, hitsF3, miss, single, double, triple, shangai, ttt, ddd, tt, dd , strk, strkloose, curses };
 }
 
 function setDart(index, value) {
@@ -225,7 +226,6 @@ function countCurses() {
   const player = props.players[currentPlayerIndex.value];
   if(player.name !== robotName) {
     player.curses += 1
-    console.log("Gros Mot ! ", player.name, " ", player.curses)
   }
 }
 
@@ -310,7 +310,7 @@ const humanPlayersSorted = computed(() =>
         </div>
 
 
-        <p id="emitScoreContainer" v-if="props.players[currentPlayerIndex].name !== robotName">
+        <p id="submitScoreContainer" v-if="props.players[currentPlayerIndex].name !== robotName">
           <button @click="countCurses" class="curseCounter">🤬 ! {{ props.players[currentPlayerIndex].curses }}</button>
           <button @click="submitTurn" class="validate">Valider ce tour (+{{currentTurnScore}} pts)</button>
         </p>
@@ -442,7 +442,7 @@ button.active {
   font-weight: bold;
 }
 
-#emitScoreContainer {
+#submitScoreContainer {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
