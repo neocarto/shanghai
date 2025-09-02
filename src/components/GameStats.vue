@@ -39,6 +39,7 @@
             <span v-if="stats(player).ddd >= 1" class="stat-badge awsome-badge">ddd : {{ stats(player).ddd }}</span>
             <span v-if="stats(player).tt >= 1" class="stat-badge awsome-badge">tt : {{ stats(player).tt }}</span>
             <span v-if="stats(player).dd >= 1" class="stat-badge awsome-badge">dd : {{ stats(player).dd }}</span>
+            <span v-if="stats(player).curses >= 1" class="stat-badge awsome-badge">🤬 : {{ stats(player).curses }}</span>
           </div>
         </div>
 
@@ -90,7 +91,7 @@ function replay() {
 
 
 if (props.role === 'admin') {
-  saveScore();
+  // saveScore();
 } 
 
 </script>
