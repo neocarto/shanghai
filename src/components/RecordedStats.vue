@@ -126,7 +126,7 @@ const intervall = getTimestamps();
 
 const data_f = data.filter((d) => d.timestamp >= intervall.septFirstLastYear)   .filter((d) => d.timestamp <= intervall.july31Next)
 const validPlayers = Array.from(d3.group(data_f, (d) => d.player_id))
-    .filter(([k, v]) => v.length >= 10)
+    .filter(([k, v]) => v.length >= 4)
     .filter(([k, v]) => v.player_id != 0) // Filtrer numberOne
     .map(([k]) => k)
 

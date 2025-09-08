@@ -91,7 +91,7 @@ function replay() {
 
 
 if (props.role === 'admin') {
-  // saveScore();
+  saveScore();
 } 
 
 </script>
