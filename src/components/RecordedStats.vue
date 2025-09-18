@@ -108,7 +108,6 @@
   const stats = ref([]);
   const numberOne = ref([]);
   const rank = ref([]);
-
   
   async function fetchScores() {
     const { data, error } = await supabase
@@ -124,33 +123,21 @@
 
 const intervall = getTimestamps();
 
-const data_f = data.filter((d) => d.timestamp >= intervall.septFirstLastYear)   .filter((d) => d.timestamp <= intervall.july31Next)
-const validPlayers = Array.from(d3.group(data_f, (d) => d.player_id))
+
+const validPlayers = Array.from(d3.group(data, (d) => d.player_id))
     .filter(([k, v]) => v.length >= 10)
     .filter(([k, v]) => v.player_id != 0) // Filtrer numberOne
     .map(([k]) => k)
+const result = getstats(data.filter((d) => validPlayers.includes(d.player_id)));
+rank.value = getBest10(data.filter((d) => d.timestamp >= intervall.septFirstLastYear)   .filter((d) => d.timestamp <= intervall.july31Next))
 
-const result = getstats(data_f.filter((d) => validPlayers.includes(d.player_id)));
-rank.value = getBest10(data_f)
+const remove = ["Number One"];
+stats.value = result.filter(d => d.data_last.length >=10).filter(d => !remove.includes(d.name))
 
-console.log(rank)
-
-const remove = ["Number One", "Felix", "Dart Punk"];
-stats.value = result.filter(d => !remove.includes(d.name));
 numberOne.value = result.find(d => d.name === "Number One");
   
   }
   
-
-
-
-
-
-
-
-
-
-
 
 
 function getstats(scores, last = 10) {
@@ -176,8 +163,6 @@ function getstats(scores, last = 10) {
     const data = scores.filter((e) => e.name == d.name);
     const data_year = scores_year.filter((e) => e.name == d.name);
     const data_last =   data_year.slice().sort((a, b) => d3.ascending(a.timestamp, b.timestamp)).slice(-last);
-
-
 
     // Win
  const playerName = d.name;
