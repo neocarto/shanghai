@@ -407,7 +407,7 @@ function getDepColor(score) {
   class="dept-badge"
   :class="getDepColor(props.players[currentPlayerIndex].totalScore + currentTurnScore)"
 >
-  Total :
+  Score :
   <b>{{ props.players[currentPlayerIndex].totalScore + currentTurnScore }}</b>
   {{ getdep(props.players[currentPlayerIndex].totalScore + currentTurnScore) }}
 </div> 
