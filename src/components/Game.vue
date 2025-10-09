@@ -690,8 +690,8 @@ button.active {
   color: white;
   padding: 4px 9px;
   border-radius: 14px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 400;
   white-space: nowrap;
   user-select: none;
   box-shadow: 0 0 5px rgba(0,0,0,0.3);
