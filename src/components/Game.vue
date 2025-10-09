@@ -361,9 +361,9 @@ function getdep(score) {
 } else if (score >= 300 && score < 400) { 
   return "| 300 validés ! Bien joué 👍 "; 
 } else if (score >= 400 && score < 500) { 
-  return "| Belle partie ⭐"; 
+  return "| ⭐ Belle partie ⭐"; 
 } else if (score >= 500 && score < 600) { 
-  return "| ⭐⭐ Record en vue !"; 
+  return "| ⭐⭐ Record en vue ⭐⭐"; 
 } else if(score >= 600) { 
   return "| ⭐⭐⭐ G.O.A.T ⭐⭐⭐"; 
 }
