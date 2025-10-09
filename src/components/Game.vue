@@ -680,6 +680,8 @@ button.active {
   font-weight: bold;
 }
 
+.validate{background-color: rgba(233, 30, 99);}
+
 
 .dept-badge {
   bottom: -10px; 
