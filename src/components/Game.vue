@@ -355,15 +355,15 @@ function getdep(score) {
 } else if (score <= 95) { 
   return "| " + acessor.get(score); 
 } else if (score >= 100 && score < 200) { 
-  return "| Barrière de la honte franchie"; 
+  return "| Barrière de la honte"; 
 } else if (score >= 200 && score < 300) { 
-  return "| Barrière de l'honneur atteinte"; 
+  return "| Barrière de l'honneur"; 
 } else if (score >= 300 && score < 400) { 
-  return "| 300 validés ! Bien joué 👍 "; 
+  return "| Bien joué 👍 "; 
 } else if (score >= 400 && score < 500) { 
-  return "| ⭐ Belle partie ⭐"; 
+  return "| ⭐ Quel talent ⭐"; 
 } else if (score >= 500 && score < 600) { 
-  return "| ⭐⭐ Record en vue ⭐⭐"; 
+  return "| ⭐⭐ Légendaire ⭐⭐"; 
 } else if(score >= 600) { 
   return "| ⭐⭐⭐ G.O.A.T ⭐⭐⭐"; 
 }
