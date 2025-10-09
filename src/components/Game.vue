@@ -401,6 +401,16 @@ function getDepColor(score) {
       <div v-if="!gameOver">
         <h2 class="round-circle">{{ currentRound }}</h2>
         <h1>{{ props.players[currentPlayerIndex].name }}</h1>
+
+
+<div
+  class="dept-badge"
+  :class="getDepColor(props.players[currentPlayerIndex].totalScore + currentTurnScore)"
+>
+  Total :
+  <b>{{ props.players[currentPlayerIndex].totalScore + currentTurnScore }}</b>
+  {{ getdep(props.players[currentPlayerIndex].totalScore + currentTurnScore) }}
+</div> 
 <div class="avatar-lineup">
   <div
     v-for="(player, index) in props.players"
@@ -428,7 +438,7 @@ function getDepColor(score) {
 </div>
   </div>
 </div>
-<hr/>
+
 
 
 
@@ -451,14 +461,7 @@ function getDepColor(score) {
           <button @click="countCurses" class="curseCounter">🤬 ! {{ props.players[currentPlayerIndex].curses }}</button>
           <button @click="submitTurn" class="validate">Valider ce tour (+{{currentTurnScore}} pts)</button>
         </p>
-        <p
-  class="dept-badge"
-  :class="getDepColor(props.players[currentPlayerIndex].totalScore + currentTurnScore)"
->
-  Total :
-  <b>{{ props.players[currentPlayerIndex].totalScore + currentTurnScore }}</b>
-  {{ getdep(props.players[currentPlayerIndex].totalScore + currentTurnScore) }}
-</p>  <p><button @click="undoTurn" class="undo-button">&#8592;</button></p>
+         <p><button @click="undoTurn" class="undo-button">&#8592;</button></p>
       </div>
 
  
@@ -684,8 +687,11 @@ button.active {
 
 
 .dept-badge {
-  bottom: -10px; 
-  right: -10px;    
+  display: block;
+  width: fit-content;
+  margin: 16px auto;
+  bottom: 0; 
+  right: 0;    
   background-color: #2196f3;
   color: white;
   padding: 4px 9px;
@@ -695,9 +701,8 @@ button.active {
   white-space: nowrap;
   user-select: none;
   box-shadow: 0 0 5px rgba(0,0,0,0.3);
-  display: inline-block;  
-  width: auto;            
-  min-width: fit-content; }
+  min-width: fit-content;
+}
 
 /* Couleurs selon le score */
 .dept-badge.neutral { background-color: #757575; }
