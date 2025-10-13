@@ -15,6 +15,7 @@ const predefinedPlayers = [
   { id: 4,name: "Robull", avatar: import.meta.env.BASE_URL + "img/ro.jpg" },
   { id: 5 ,name: "Louis CLXXX", avatar: import.meta.env.BASE_URL + "img/crown.jpeg" },
   { id: 7,name: "Cramomille", avatar: import.meta.env.BASE_URL + "img/cramomille.png" },
+  { id: 8,name: "Chloé", avatar: import.meta.env.BASE_URL + "img/ponpon.png" },
 ];
 
 const user = ref(null);
