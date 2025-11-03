@@ -28,6 +28,19 @@ onBeforeUnmount(() => {
   window.removeEventListener('touchmove', onTouchMove);
 });
 
+// Fillscreen
+function toggleFullscreen() {
+  const elem = document.documentElement; // la page entière
+
+  if (!document.fullscreenElement) {
+    elem.requestFullscreen().catch(err => {
+      console.warn(`Erreur lors du passage en plein écran : ${err.message}`);
+    });
+  } else {
+    document.exitFullscreen();
+  }
+}
+
 // Play
 const nb = 20;
 
@@ -399,7 +412,7 @@ function getDepColor(score) {
   </p>
    <div class="container">
       <div v-if="!gameOver">
-        <h2 class="round-circle">{{ currentRound }}</h2>
+        <h2 class="round-circle" @click="toggleFullscreen">{{ currentRound }}</h2>
         <h1>{{ props.players[currentPlayerIndex].name }}</h1>
 
 
