@@ -424,6 +424,10 @@ function getDepColor(score) {
   <b>{{ props.players[currentPlayerIndex].totalScore + currentTurnScore }}</b>
   {{ getdep(props.players[currentPlayerIndex].totalScore + currentTurnScore) }}
 </div> 
+
+
+
+
 <div class="avatar-lineup">
   <div
     v-for="(player, index) in props.players"
@@ -436,6 +440,9 @@ function getDepColor(score) {
       class="avatar"
       :class="{ current: index === currentPlayerIndex }"
     />
+
+
+
     <div
   :class="[
     'score-badge',
@@ -447,8 +454,16 @@ function getDepColor(score) {
     }
   ]"
 >
+
   {{ player.totalScore }}
 </div>
+
+
+          <!-- 🔵 Petit rond coloré individuel pour chaque joueur -->
+          <div
+            class="score-dot"
+            :class="getDepColor(player.totalScore)"
+          ></div>
   </div>
 </div>
 
@@ -725,6 +740,29 @@ button.active {
 .dept-badge.ultra4 { background-color: #f44336; }        /* Rouge */
 .dept-badge.ultra5 { background-color: #000; color: gold; }     /* Noir / Or */
 
+/* 🔵 Pastille colorée : en haut à droite du badge de score */
+.score-dot {
+  position: absolute;
+  bottom: -12px;
+  right: -12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+  z-index: 5; /* toujours au-dessus */
+}
 
+.score-dot:hover {
+  transform: scale(1.3);
+}
+
+/* Couleurs synchronisées avec getDepColor() */
+.score-dot.neutral { background-color: #757575; }
+.score-dot.ultra1 { background-color: #2196f3; }
+.score-dot.ultra2 { background-color: #9c27b0; }
+.score-dot.ultra3 { background-color: #4caf50; }
+.score-dot.ultra4 { background-color: #f44336; }
+.score-dot.ultra5 { background-color: #000; border: 1px solid gold; }
 
 </style>
