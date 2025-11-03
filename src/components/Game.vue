@@ -460,10 +460,11 @@ function getDepColor(score) {
 
 
           <!-- 🔵 Petit rond coloré individuel pour chaque joueur -->
-          <div
-            class="score-dot"
-            :class="getDepColor(player.totalScore)"
-          ></div>
+<div
+  v-if="player.name !== robotName && player.totalScore >= 100"
+  class="score-dot"
+  :class="getDepColor(player.totalScore)"
+></div>
   </div>
 </div>
 
@@ -743,14 +744,14 @@ button.active {
 /* 🔵 Pastille colorée : en haut à droite du badge de score */
 .score-dot {
   position: absolute;
-  bottom: -12px;
-  right: -12px;
+  top: -10px;
+  right: -10px;
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease;
-  z-index: 5; /* toujours au-dessus */
+  z-index: 10; /* toujours au-dessus */
 }
 
 .score-dot:hover {
