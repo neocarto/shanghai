@@ -4,7 +4,7 @@
 
  <div class="scores-page">
     <h1><ins>Classement glissant</ins></h1>
-    <p>Sur les 10 dernières parties</p>
+    <p>Sur les 10 dernières parties<br><small><i>(au moins une partie depuis un mois)</i></small></p>
   <div v-if="stats.length == 0">
     <h1>Début de saison, repassez plus tard !</h1>
   </div>
@@ -153,6 +153,12 @@ numberOne.value = result.find(d => d.name === "Number One");
 
 function getstats(scores, last = 10) {
 
+// Lat month
+const now = new Date();
+const oneMonthAgo = new Date();
+oneMonthAgo.setMonth(now.getMonth() - 1);
+
+
 
   // Players
   let players = [...new Set(scores.map((d) => d.name))].map((name) => ({
@@ -173,7 +179,7 @@ function getstats(scores, last = 10) {
   players = players.map((d) => {
     const data = scores.filter((e) => e.name == d.name);
     const data_year = scores_year.filter((e) => e.name == d.name);
-    const data_last =   data_year.slice().sort((a, b) => d3.ascending(a.timestamp, b.timestamp)).slice(-last);
+    const data_last =   data_year.filter(d => new Date(d.timestamp) >= oneMonthAgo).slice().sort((a, b) => d3.ascending(a.timestamp, b.timestamp)).slice(-last);
 
     // Win
  const playerName = d.name;
