@@ -46,7 +46,8 @@ const nb = 20;
 
 const props = defineProps({
   players: Array,
-  role: String
+  role: String,
+  site: String
 });
 
 
@@ -503,6 +504,7 @@ function getDepColor(score) {
     :stats="stats"
     :replay="replay"
     :role="props.role"
+    :site="props.site"
      @view-scores="$emit('view-scores')"
   />
       </div>
@@ -744,8 +746,8 @@ button.active {
 /* 🔵 Pastille colorée : en haut à droite du badge de score */
 .score-dot {
   position: absolute;
-  top: -10px;
-  right: -10px;
+  top: 43px;
+  right: 4px;
   width: 12px;
   height: 12px;
   border-radius: 50%;

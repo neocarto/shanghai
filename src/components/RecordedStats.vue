@@ -1,12 +1,14 @@
 <template>
 
 
-  <div class="scores-page">
+
+ <div class="scores-page">
     <h1><ins>Classement glissant</ins></h1>
     <p>Sur les 10 dernières parties</p>
   <div v-if="stats.length == 0">
     <h1>Début de saison, repassez plus tard !</h1>
   </div>
+
   <div v-if="stats.length > 0">
       <div class="podium" v-if="stats.length >= 3" style="position: relative; display: inline-block;">
         <img src="/img/podium.webp" alt="Podium" class="podium-image" />
@@ -106,32 +108,41 @@
   import {streak, streakLoose, getTimestamps, convertToTableString, convertToTableString2, getBest10, win, shangai, tt, ttt, dd, ddd, medal} from '../helpers/computeStats';
   
   const stats = ref([]);
+
   const numberOne = ref([]);
   const rank = ref([]);
   
   async function fetchScores() {
+     console.log("fetchScores called");
     const { data, error } = await supabase
       .from('scores')
       .select('*')
       .order('score', { ascending: false });
-  
-    if (error) {
+        if (error) {
       console.error('Erreur de récupération des scores :', error);
       return;
     }
     if (!data.length) return;
 
+
+
+
 const intervall = getTimestamps();
 
 
-const validPlayers = Array.from(d3.group(data, (d) => d.player_id))
+    const validPlayers = Array.from(d3.group(data, (d) => d.name))
     .filter(([k, v]) => v.length >= 10)
-    .filter(([k, v]) => v.player_id != 0) // Filtrer numberOne
+    .filter(([k, v]) => v.name != "Number One") // Filtrer numberOne
     .map(([k]) => k)
-const result = getstats(data.filter((d) => validPlayers.includes(d.player_id)));
-rank.value = getBest10(data.filter((d) => d.timestamp >= intervall.septFirstLastYear)   .filter((d) => d.timestamp <= intervall.july31Next))
+
+
+const result = getstats(data.filter((d) => validPlayers.includes(d.name)));
+
+
+rank.value = getBest10(data.filter((d) => d.timestamp >= intervall.septFirstLastYear).filter((d) => d.timestamp <= intervall.july31Next))
 
 const remove = ["Number One"];
+
 stats.value = result.filter(d => d.data_last.length >=10).filter(d => !remove.includes(d.name))
 
 numberOne.value = result.find(d => d.name === "Number One");

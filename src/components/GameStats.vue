@@ -59,14 +59,14 @@
 <script setup>
 
 
-const props = defineProps(['sortedPlayers', 'humanPlayersSorted', 'robotName', 'stats','role']);
+const props = defineProps(['sortedPlayers', 'humanPlayersSorted', 'robotName', 'stats','role', 'site']);
 
 import { supabase } from '../supabase';
 
 
 async function saveScore() {
 const timestamp = Date.now();
-console.log(props.sortedPlayers)
+console.log(props.site)
 
 const insertData = props.sortedPlayers.map(d => ({
   player_id: d.id,
@@ -74,6 +74,7 @@ const insertData = props.sortedPlayers.map(d => ({
   timestamp: timestamp,
   score: d.totalScore,
   hits: d.scores,
+  site: props.site  
   
 }));
 
