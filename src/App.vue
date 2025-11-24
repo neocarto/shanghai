@@ -19,7 +19,7 @@ const predefinedPlayersRiate = [
 const predefinedPlayersCondorcet = [
   { id: 1001,name: "Hugues", avatar: import.meta.env.BASE_URL + "img/default.jpeg" },
   { id: 1002,name: "Elina", avatar: import.meta.env.BASE_URL + "img/default.jpeg" },
-  { id: 1003,name: "Mattia", avatar: import.meta.env.BASE_URL + "img/default.jpeg" },
+  { id: 1003,name: "Mattia", avatar: import.meta.env.BASE_URL + "img/archi.jpg" },
 ];
 
 const user = ref(null);
