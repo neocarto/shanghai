@@ -35,35 +35,21 @@
 
         <div v-for="(score, index) in stats" :key="index" class="player-card">
           <h2 class="player-name">
-            {{ score.name }}               
+            {{ score.medal_mean_last }}
+            {{ score.name }} - <small>{{ score.mean_last }} pts</small>
+   
+               
           </h2>
-    
           
 
-<div class="mode-selector">
-  <label>
-    <input type="radio" v-model="mode" value="Last10" /> Last 10
-  </label>
-  <label>
-    <input type="radio" v-model="mode" value="Saison" /> Saison
-  </label>
-  <label>
-    <input type="radio" v-model="mode" value="Hall of fame" /> Hall of fame
-  </label>
-</div>
-<!-- Dartboard dynamique -->
-<div v-html="getDartboard(score.name)"></div>
-
-
-
-<!-- <div
+<div
   v-html="
     drawDartboard(
       last(rawdata)
         .filter(d => d.name == score.name)
         .map(d => JSON.parse(d.hits)), '',800, false   ).outerHTML
   "
-></div> -->
+></div>
 
 
 
@@ -148,7 +134,6 @@ import { last } from '../helpers/last.js';
 
 
 const stats = ref([]);
-const mode = ref('Last10');
   const numberOne = ref([]);
   const rank = ref([]);
   const rawdata = ref([]);
@@ -525,25 +510,6 @@ const win_last =  win( playerName, data_last, scores)
   onMounted(() => {
     fetchScores();
   });
-
-
-  function getDartboard(playerName) {
-  let data = [];
-  if (mode.value === 'Last10') {
-    data = last(rawdata.value)
-      .filter(d => d.name === playerName)
-      .map(d => JSON.parse(d.hits));
-  } else if (mode.value === 'Saison') {
-    data = season(rawdata.value)
-      .filter(d => d.name === playerName)
-      .map(d => JSON.parse(d.hits));
-  } else if (mode.value === 'Hall of fame') {
-    data = rawdata.value
-      .filter(d => d.name === playerName)
-      .map(d => JSON.parse(d.hits));
-  }
-  return drawDartboard(data, '', 800, true).outerHTML;
-}
   </script>
   
   <style scoped>
@@ -647,10 +613,6 @@ const win_last =  win( playerName, data_last, scores)
   }
   
   .player-name {
-      display: flex;
-  justify-content: center;
-  text-align: center;
-  width: 100%;
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 0.3rem;
@@ -762,30 +724,6 @@ Cramomille	330	310	266	256	254	241	207	191	183	174	241.2
   font-size: 0.70rem;
   padding-bottom: 10px;
 
-
-
-
 }
-
-
-.mode-selector {
-  display: flex;
-  justify-content: center; /* centre horizontalement */
-  gap: 1.5rem; /* espace entre chaque radio */
-  margin-bottom: 1rem;
-}
-
-.mode-selector label {
-  display: flex;
-  align-items: center;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.mode-selector input[type="radio"] {
-  margin-right: 0.3rem; /* espace entre bouton et texte */
-}
-
-
-</style>
+  </style>
   
