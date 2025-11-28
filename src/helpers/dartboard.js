@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-export function drawDartboard(hits, player = null, size = 600) {
+export function drawDartboard(hits, player = null, size = 1000) {
   const stats = compute(hits);
   const nb = stats.find((d) => d.id == "stats").parties;
   const width = size ?? "100%";

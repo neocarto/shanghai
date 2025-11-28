@@ -20,8 +20,8 @@
 
         <!-- Stats, avatar et dartboard seulement si ce n'est pas le robot -->
         <template v-if="player.name !== robotName">
-          <!-- <span class="final-player-score">{{ player.totalScore }} pts</span>
-          <img :src="player.avatar" alt="avatar" class="final-avatar-large" /> -->
+          <!-- <span class="final-player-score">{{ player.totalScore }} pts</span> -->
+          <img :src="player.avatar" alt="avatar" class="final-avatar-large" />
 
           <div class="final-player-info">
             <div class="dartboard-container" v-html="getDartboardSVG(player)"></div>
@@ -75,7 +75,7 @@ if (props.role === 'admin') {
 function getDartboardSVG(player) {
   // drawDartboard peut être modifiée pour renvoyer une string SVG si nécessaire
   // ici on utilise outerHTML pour transformer le SVG en string directement
-  const svg = drawDartboard(player.scores, player.name, 600); // taille 200px
+  const svg = drawDartboard(player.scores, player.name, 1000); // taille 200px
   return svg.outerHTML;
 }
 </script>
@@ -99,7 +99,7 @@ function getDartboardSVG(player) {
 
 .final-player-info {
   width: 100%;
-  max-width: 350px;
+  max-width: 850px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -107,12 +107,12 @@ function getDartboardSVG(player) {
 
 .dartboard-container {
   margin-top: 0px;
-  width: 100%;;
+  width: 100%;
 }
 
 .final-avatar-large {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
@@ -132,8 +132,8 @@ function getDartboardSVG(player) {
   list-style: none;
   padding: 0;
   margin: 0 auto;       
-  max-width: 800px;     
-  display: flex;
+  max-width: 1000px;     
+ 
   flex-direction: column;
   align-items: center; 
   gap: 0px;           
