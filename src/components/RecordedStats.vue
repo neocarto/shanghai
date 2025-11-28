@@ -18,7 +18,9 @@
         <div class="podium-text text-4">Chocolat : {{ stats[3].name }} ({{ stats[3].mean_last }})</div>
 
       </div>
-  <div align = "center">    <div class="player-card " v-html="convertToTableString2(stats)"></div></div>
+>  <div align = "center">    <div class="player-card " v-html="convertToTableString2(stats)"></div></div>
+    
+    
       <h1><ins>Classement de la saison</ins></h1>
       <p>Moyenne des 10 meilleurs scores</p>
 
@@ -28,11 +30,32 @@
 
         <h1><ins>Fiches individuelles</ins></h1>
 
+
+
+
         <div v-for="(score, index) in stats" :key="index" class="player-card">
           <h2 class="player-name">
             {{ score.medal_mean_last }}
             {{ score.name }} - <small>{{ score.mean_last }} pts</small>
+
+            xxxx
+         
+         
+               
           </h2>
+
+<div
+  v-html="
+    drawDartboard(
+      last(rawdata)
+        .filter(d => d.name == score.name)
+        .map(d => JSON.parse(d.hits)), '',800, false   ).outerHTML
+  "
+></div>
+
+
+
+
           <div class="last-scores">
     <!-- <template v-for="(s, i) in score.data_last" :key="i">
       <strong v-if="i === 0">{{ s }}</strong>
@@ -107,11 +130,26 @@
   const d3 = Object.assign({}, { min, max, mean, sum, ascending, descending, count, group });
   import {streak, streakLoose, getTimestamps, convertToTableString, convertToTableString2, getBest10, win, shangai, tt, ttt, dd, ddd, medal} from '../helpers/computeStats';
   
-  const stats = ref([]);
+import { drawDartboard } from '../helpers/dartboard.js'; 
+import { season } from '../helpers/season.js'; 
+import { last } from '../helpers/last.js'; 
 
+
+const stats = ref([]);
   const numberOne = ref([]);
   const rank = ref([]);
-  
+  const rawdata = ref([]);
+
+
+//   // Retourne le SVG du dartboard en string
+// function getDartboardSVG(player) {
+//   // drawDartboard peut être modifiée pour renvoyer une string SVG si nécessaire
+//   // ici on utilise outerHTML pour transformer le SVG en string directement
+//   const svg = drawDartboard(player.scores, player.name, 600); 
+//   return svg.outerHTML;
+// }
+
+
   async function fetchScores() {
      console.log("fetchScores called");
     const { data, error } = await supabase
@@ -124,7 +162,11 @@
     }
     if (!data.length) return;
 
+console.log(data)
 
+
+ rawdata.value = data
+  
 
 
 const intervall = getTimestamps();
@@ -148,7 +190,8 @@ stats.value = result.filter(d => d.data_last.length >=10).filter(d => !remove.in
 numberOne.value = result.find(d => d.name === "Number One");
   
   }
-  
+
+
 
 
 function getstats(scores, last = 10) {

@@ -40,7 +40,7 @@
 
 <script setup>
 import { supabase } from '../supabase';
-import { drawDartboard } from '../helpers/dartboard.js'; // adapte le chemin
+import { drawDartboard } from '../helpers/dartboard.js'; 
 
 const props = defineProps(['sortedPlayers', 'humanPlayersSorted', 'robotName', 'stats','role', 'site']);
 
