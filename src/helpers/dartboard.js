@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 
-export function drawDartboard(hits, player = null, size = 1000) {
+export function drawDartboard(hits, player = null, size = 800) {
   const stats = compute(hits);
   const nb = stats.find((d) => d.id == "stats").parties;
   const width = size ?? "100%";
@@ -307,7 +307,7 @@ export function drawDartboard(hits, player = null, size = 1000) {
     .attr("y", 40) // hauteur depuis le haut
     .attr("text-anchor", "middle")
     .attr("dominant-baseline", "middle")
-    .attr("font-size", 35)
+    .attr("font-size", 40)
     .attr("fill", "#521a3a")
     .attr("font-weight", "bold")
     .attr("font-family", "Arial, Helvetica, sans-serif")

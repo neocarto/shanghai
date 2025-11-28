@@ -75,7 +75,7 @@ if (props.role === 'admin') {
 function getDartboardSVG(player) {
   // drawDartboard peut être modifiée pour renvoyer une string SVG si nécessaire
   // ici on utilise outerHTML pour transformer le SVG en string directement
-  const svg = drawDartboard(player.scores, player.name, 1000); // taille 200px
+  const svg = drawDartboard(player.scores, player.name, 600); // taille 200px
   return svg.outerHTML;
 }
 </script>
