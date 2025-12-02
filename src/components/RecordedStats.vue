@@ -235,7 +235,12 @@ oneMonthAgo.setMonth(now.getMonth() - 1);
   players = players.map((d) => {
     const data = scores.filter((e) => e.name == d.name);
     const data_year = scores_year.filter((e) => e.name == d.name);
-    const data_last =   data_year.filter(d => new Date(d.timestamp) >= oneMonthAgo).slice().sort((a, b) => d3.ascending(a.timestamp, b.timestamp)).slice(-last);
+    let data_last =   data_year.slice().sort((a, b) => d3.ascending(a.timestamp, b.timestamp)).slice(-last);
+
+    console.log(data_last)
+    data_last = data_last.at(-1).timestamp >= oneMonthAgo ? data_last : [];
+
+
 
     // Win
  const playerName = d.name;
