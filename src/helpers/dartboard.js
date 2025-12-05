@@ -4,7 +4,8 @@ export function drawDartboard(hits, player = null, size = 800, title = true) {
   const stats = compute(hits);
   const nb = stats.find((d) => d.id == "stats").parties;
   const width = size ?? "100%";
-  const height = size ?? "100%";
+  //const height = size ?? "100%";
+  const height = size + 0;
   const vb = size ?? 600;
   const cx = width / 2;
   const cy = height / 2;
@@ -42,7 +43,8 @@ export function drawDartboard(hits, player = null, size = 800, title = true) {
   // SVG
   const svg = d3
     .create("svg")
-    .attr("viewBox", `0 0 ${vb} ${vb}`) // garde les proportions
+    //.attr("viewBox", `0 0 ${vb} ${vb}`) // garde les proportions
+    .attr("viewBox", `0 0 ${vb} ${vb + 0}`)
     .style("width", "100%")
     .style("height", "100%"); // remplit tout le container
 
@@ -51,7 +53,7 @@ export function drawDartboard(hits, player = null, size = 800, title = true) {
     .attr("x", 0)
     .attr("y", 0)
     .attr("width", vb)
-    .attr("height", vb)
+    .attr("height", vb + 200)
     .attr("fill", "white")
     .attr("rx", 20)
     .attr("ry", 20);
@@ -276,26 +278,49 @@ export function drawDartboard(hits, player = null, size = 800, title = true) {
   g.append("text")
     .attr("class", "center-text")
     .attr("x", 0)
-    .attr("y", 0)
+    .attr("y", -15)
     .attr("text-anchor", "middle")
     .attr("dominant-baseline", "middle")
-    .attr("font-size", 28)
+    .attr("font-size", 32)
     .attr("fill", "#521a3a")
     .attr("font-weight", "bold")
     .attr("font-family", "Arial, Helvetica, sans-serif")
     .text(Math.round(stats.find((d) => d.id == "stats").hits) + "/60");
 
+  let f1f2f3 = [0, 0, 0];
+
+  for (const row of nb == 1 ? hits : hits.flat()) {
+    for (let i = 0; i < 3; i++) {
+      if (row[i] !== 0) f1f2f3[i]++;
+    }
+  }
+  f1f2f3 = f1f2f3.map((d) => d / nb).map((d) => Math.round(d));
+
   g.append("text")
     .attr("class", "center-text")
     .attr("x", 0)
-    .attr("y", 22)
+    .attr("y", 11)
     .attr("text-anchor", "middle")
     .attr("dominant-baseline", "middle")
-    .attr("font-size", 18)
-    .attr("fill", "#424242")
+    .attr("font-size", 20)
+    .attr("fill", "#521a3a")
+    .attr("font-weight", "bold")
+    .attr("font-family", "Arial, Helvetica, sans-serif")
+    .text("" + f1f2f3.join("|") + "");
+
+  g.append("text")
+    .attr("class", "center-text")
+    .attr("x", 0)
+    .attr("y", 35)
+    .attr("text-anchor", "middle")
+    .attr("dominant-baseline", "middle")
+    .attr("font-size", 16)
+    .attr("fill", "#521a3a")
     .attr("font-weight", "bold")
     .attr("font-family", "Arial, Helvetica, sans-serif")
     .text("(" + stats.find((d) => d.id == "stats").streak + ")");
+
+  console.log(stats);
 
   // TEXT AU DESSUS DE LA CIBLE
   if (title) {
@@ -314,6 +339,7 @@ export function drawDartboard(hits, player = null, size = 800, title = true) {
       .attr("font-family", "Arial, Helvetica, sans-serif")
       .text(text);
   }
+
   return svg.node();
 }
 
