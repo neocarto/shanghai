@@ -285,6 +285,10 @@ export function drawDartboard(hits, player = null, size = 800, title = true) {
     .attr("fill", "#521a3a")
     .attr("font-weight", "bold")
     .attr("font-family", "Arial, Helvetica, sans-serif")
+    .attr("stroke", "white")
+    .attr("stroke-width", 7)
+    .attr("stroke-linejoin", "round")
+    .style("paint-order", "stroke")
     .text(Math.round(stats.find((d) => d.id == "stats").hits) + "/60");
 
   let f1f2f3 = [0, 0, 0];
@@ -306,7 +310,11 @@ export function drawDartboard(hits, player = null, size = 800, title = true) {
     .attr("fill", "#521a3a")
     .attr("font-weight", "bold")
     .attr("font-family", "Arial, Helvetica, sans-serif")
-    .text("" + f1f2f3.join("|") + "");
+    .attr("stroke", "white")
+    .attr("stroke-width", 7)
+    .attr("stroke-linejoin", "round")
+    .style("paint-order", "stroke")
+    .text("" + f1f2f3.join(" ") + "");
 
   g.append("text")
     .attr("class", "center-text")
@@ -318,9 +326,11 @@ export function drawDartboard(hits, player = null, size = 800, title = true) {
     .attr("fill", "#521a3a")
     .attr("font-weight", "bold")
     .attr("font-family", "Arial, Helvetica, sans-serif")
+    .attr("stroke", "white")
+    .attr("stroke-width", 7)
+    .attr("stroke-linejoin", "round")
+    .style("paint-order", "stroke")
     .text("(" + stats.find((d) => d.id == "stats").streak + ")");
-
-  console.log(stats);
 
   // TEXT AU DESSUS DE LA CIBLE
   if (title) {

@@ -89,16 +89,16 @@
               <tr><th>Parties</th><td>{{ score.played_last }}</td><td>{{ score.played_year }}</td><td>{{ score.played_all }}</td></tr>
               <tr><th>Win</th><td>{{ Math.round(score.win_last * 10)/10 }} %</td><td>{{ Math.round(score.win_year * 10)/10 }} %</td><td>{{ Math.round(score.win_all * 10)/10 }} %</td></tr>
               <tr><th>Assiduité</th><td>-</td><td>{{ score.assiduity_year }} %</td><td>{{ score.assiduity_all }} %</td></tr>
-              <tr><th>Moyenne</th><td>{{ score.mean_last }} {{ score.medal_mean_last }}</td><td>{{ score.mean_year }} {{ score.medal_mean_year }}</td><td>{{ score.mean_all }} {{ score.medal_mean_all }}</td></tr>
-              <tr><th>Cumul</th><td>{{ Math.round(score.cumul_last/100)/10 + "K" }} {{ score.medal_cumul_last }}</td><td>{{ Math.round(score.cumul_year/100)/10 + "K" }} {{ score.medal_cumul_year }}</td><td>{{ Math.round(score.cumul_all/100)/10 + "K" }} {{ score.medal_cumul_all }}</td></tr>
-              <tr><th>Meilleur</th><td>{{ score.max_last }} {{ score.medal_max_last }}</td><td>{{ score.max_year }} {{ score.medal_max_year }}</td><td>{{ score.max_all }} {{ score.medal_max_all }}</td></tr>
-              <tr><th>Streak</th><td>{{ score.streak_last }} {{ score.medal_streak_last }}</td><td>{{ score.streak_year }} {{ score.medal_streak_year }}</td><td>{{ score.streak_all }} {{ score.medal_streak_all }}</td></tr>
-              <tr><th>Streak Loose</th><td>{{ score.streakloose_last }} {{ score.medal_streakloose_last }}</td><td>{{ score.streakloose_year }} {{ score.medal_streakloose_year }}</td><td>{{ score.streakloose_all }} {{ score.medal_streakloose_all }}</td></tr>
-              <tr><th>Hits <small>(60)</small></th><td>{{ score.hits_last }} {{ score.medal_hits_last }}</td><td>{{ score.hits_year }} {{ score.medal_hits_year }}</td><td>{{ score.hits_all }} {{ score.medal_hits_all }}</td></tr>
-              <tr><th>Hits <small>(180)</small></th><td>{{ score.hits2_last }} {{ score.medal_hits2_last }}</td><td>{{ score.hits2_year }} {{ score.medal_hits2_year }}</td><td>{{ score.hits2_all }} {{ score.medal_hits2_all }}</td></tr>
-              <tr><th>Meilleur coup</th><td>{{ score.hitbest_last }} {{ score.medal_hitbest_last }}</td><td>{{ score.hitbest_year }} {{ score.medal_hitbest_year }}</td><td>{{ score.hitbest_all }} {{ score.medal_hitbest_all }}</td></tr>
-              <tr><th>Triples</th><td>{{ score.triple_last }} % {{ score.medal_triple_last }}</td><td>{{ score.triple_year }} % {{ score.medal_triple_year }}</td><td>{{ score.triple_all }} % {{ score.medal_triple_all }}</td></tr>
-              <tr><th>Doubles</th><td>{{ score.double_last }} % {{ score.medal_double_last }}</td><td>{{ score.double_year }} % {{ score.medal_double_year }}</td><td>{{ score.double_all }} % {{ score.medal_double_all }}</td></tr>
+              <tr><th>Moyenne</th><td>{{ score.mean_last }}</td><td>{{ score.mean_year }}</td><td>{{ score.mean_all }}</td></tr>
+              <tr><th>Cumul</th><td>{{ Math.round(score.cumul_last/100)/10 + "K" }}</td><td>{{ Math.round(score.cumul_year/100)/10 + "K" }}</td><td>{{ Math.round(score.cumul_all/100)/10 + "K" }}</td></tr>
+              <tr><th>Meilleur</th><td>{{ score.max_last }}</td><td>{{ score.max_year }}</td><td>{{ score.max_all }}</td></tr>
+              <tr><th>Streak</th><td>{{ score.streak_last }}</td><td>{{ score.streak_year }}</td><td>{{ score.streak_all }}</td></tr>
+              <tr><th>Streak Loose</th><td>{{ score.streakloose_last }}</td><td>{{ score.streakloose_year }}</td><td>{{ score.streakloose_all }}</td></tr>
+              <tr><th>Hits <small>(60)</small></th><td>{{ score.hits_last }}</td><td>{{ score.hits_year }}</td><td>{{ score.hits_all }}</td></tr>
+              <tr><th>Hits <small>(180)</small></th><td>{{ score.hits2_last }}</td><td>{{ score.hits2_year }}</td><td>{{ score.hits2_all }}</td></tr>
+              <tr><th>Meilleur coup</th><td>{{ score.hitbest_last }}</td><td>{{ score.hitbest_year }}</td><td>{{ score.hitbest_all }}</td></tr>
+              <tr><th>Triples</th><td>{{ score.triple_last }} %</td><td>{{ score.triple_year }} %</td><td>{{ score.triple_all }} %</td></tr>
+              <tr><th>Doubles</th><td>{{ score.double_last }} %</td><td>{{ score.double_year }} %</td><td>{{ score.double_all }} %</td></tr>
               <tr><th>Shanghai</th><td>{{ score.shanghai_last }}</td><td>{{ score.shanghai_year }}</td><td>{{ score.shanghai_all }}</td></tr>
               <tr><th>ttt</th><td>{{ score.ttt_last }}</td><td>{{ score.ttt_year }}</td><td>{{ score.ttt_all }}</td></tr>
               <tr><th>tt</th><td>{{ score.tt_last }}</td><td>{{ score.tt_year }}</td><td>{{ score.tt_all }}</td></tr>
@@ -154,13 +154,7 @@ const mode = ref('Last10');
   const rawdata = ref([]);
 
 
-//   // Retourne le SVG du dartboard en string
-// function getDartboardSVG(player) {
-//   // drawDartboard peut être modifiée pour renvoyer une string SVG si nécessaire
-//   // ici on utilise outerHTML pour transformer le SVG en string directement
-//   const svg = drawDartboard(player.scores, player.name, 600); 
-//   return svg.outerHTML;
-// }
+
 
 
   async function fetchScores() {

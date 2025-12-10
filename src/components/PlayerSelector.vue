@@ -1,5 +1,7 @@
 <script setup>
 import { ref, defineEmits, onMounted } from 'vue';
+import { predefinedPlayersRiate, predefinedPlayersCondorcet, predefinedPlayersOthers } from '../players.js';
+
 
 const props = defineProps({
   predefinedPlayers: Array,
@@ -9,6 +11,13 @@ const props = defineProps({
 const emit = defineEmits(['start-game']);
 const players = ref([]);
 const newPlayer = ref("");
+
+// Avatar management
+const allPlayers = [
+  ...predefinedPlayersRiate,
+  ...predefinedPlayersCondorcet,
+  ...predefinedPlayersOthers
+];
 
 // Avatars par défaut
 const defaultAvatars = [
@@ -26,6 +35,8 @@ const defaultAvatars = [
 ];
 let unusedDefaultAvatars = [...defaultAvatars];
 
+
+
 function getRandomDefaultAvatar() {
   if (unusedDefaultAvatars.length === 0) {
     unusedDefaultAvatars = [...defaultAvatars];
@@ -37,10 +48,14 @@ function getRandomDefaultAvatar() {
 function addPlayer() {
   const name = newPlayer.value.trim();
   if (name === "") return;
-  if (players.value.some(p => p.name === name)) return;
 
-  const found = props.predefinedPlayers.find(p => p.name === name);
+  if (players.value.some(p => p.name.toLowerCase() === name.toLowerCase())) return;
+  const found = allPlayers.find(
+    p => p.name.toLowerCase() === name.toLowerCase()
+  );
+
   players.value.push({
+    id: found?.id || null,
     name,
     avatar: found?.avatar || getRandomDefaultAvatar()
   });
@@ -116,12 +131,21 @@ onMounted(() => {
 
 
   <form @submit.prevent="addPlayer">
-    <input
-      type="text"
-      v-model="newPlayer"
-      placeholder="Ajouter un joueur"
-      @change="onInputChange"
-    />
+<input
+  list="playerOptions"
+  type="text"
+  v-model="newPlayer"
+  placeholder="Ajouter un joueur"
+  @change="onInputChange"
+/>
+
+<datalist id="playerOptions">
+  <option 
+    v-for="p in allPlayers" 
+    :key="p.name" 
+    :value="p.name"
+  />
+</datalist>
     <button :disabled="newPlayer.length === 0">Ajouter</button>
   </form>
 
