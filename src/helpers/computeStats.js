@@ -122,7 +122,7 @@ export function win(player, data, scores) {
         .filter((e) => e.timestamp == d)
         .slice()
         .sort((a, b) => d3.descending(a.score, b.score))
-        .map((d) => d)[1].name;
+        .map((d) => d)[1]?.name;
       if (winner == player) {
         count++;
       }

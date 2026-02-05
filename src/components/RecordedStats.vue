@@ -1,10 +1,9 @@
 <template>
 
-
-
  <div class="scores-page">
     <h1><ins>Classement glissant</ins></h1>
     <p>Sur les 10 dernières parties<br><small><i>(au moins une partie depuis un mois)</i></small></p>
+
   <div v-if="stats.length == 0">
     <h1>Début de saison, repassez plus tard !</h1>
   </div>
@@ -152,8 +151,6 @@ const mode = ref('Last10');
   const numberOne = ref([]);
   const rank = ref([]);
   const rawdata = ref([]);
-
-
 
 
 
