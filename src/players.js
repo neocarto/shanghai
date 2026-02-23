@@ -14,7 +14,7 @@ export const predefinedPlayersRiate = [
   {
     id: 5,
     name: "Louis CLXXX",
-    avatar: import.meta.env.BASE_URL + "img/louis.jpeg",
+    avatar: import.meta.env.BASE_URL + "img/louis.jpg",
   },
   {
     id: 7,
