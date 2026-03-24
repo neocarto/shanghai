@@ -14,14 +14,14 @@ export function last(scores, nb = 10) {
     .sort((a, b) => d3.ascending(a.timestamp, b.timestamp));
 
   let players = [...new Set(result.map((d) => d.name))].filter(
-    (d) => d !== "Number One"
+    (d) => d !== "Number One",
   );
 
   let output = players.map((d) =>
     result
       .filter((e) => e.name == d)
       //.filter((d) => new Date(d.timestamp) >= oneMonthAgo)
-      .slice(-nb)
+      .slice(-nb),
   );
 
   //return output;

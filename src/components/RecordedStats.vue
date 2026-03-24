@@ -153,48 +153,50 @@ const mode = ref('Last10');
   const rawdata = ref([]);
 
 
+async function fetchScores() {
+  console.log("fetchScores called");
+  let allData = [];
+  let from = 0;
+  const step = 1000;
 
-  async function fetchScores() {
-     console.log("fetchScores called");
+  while (true) {
     const { data, error } = await supabase
       .from('scores')
       .select('*')
-      .order('score', { ascending: false });
-        if (error) {
+      .order('score', { ascending: false })
+      .range(from, from + step - 1);
+
+    if (error) {
       console.error('Erreur de récupération des scores :', error);
       return;
     }
-    if (!data.length) return;
 
-console.log(data)
+    if (!data || data.length === 0) break; 
 
+    allData = allData.concat(data);
 
- rawdata.value = data
-  
+    if (data.length < step) break; 
+    from += step;
+  }
+
+  if (!allData.length) return;
+
+ rawdata.value = allData
 
 
 const intervall = getTimestamps();
 
-
-    const validPlayers = Array.from(d3.group(data, (d) => d.name))
+    const validPlayers = Array.from(d3.group(allData, (d) => d.name))
     .filter(([k, v]) => v.length >= 10)
     .filter(([k, v]) => v.name != "Number One") // Filtrer numberOne
     .map(([k]) => k)
 
-
-const result = getstats(data.filter((d) => validPlayers.includes(d.name)));
-
-
-rank.value = getBest10(data.filter((d) => d.timestamp >= intervall.septFirstLastYear).filter((d) => d.timestamp <= intervall.july31Next))
-
+const result = getstats(allData.filter((d) => validPlayers.includes(d.name)));
+rank.value = getBest10(allData.filter((d) => d.timestamp >= intervall.septFirstLastYear).filter((d) => d.timestamp <= intervall.july31Next))
 const remove = ["Number One"];
-
 stats.value = result.filter(d => d.data_last.length >=10).filter(d => !remove.includes(d.name))
-
 numberOne.value = result.find(d => d.name === "Number One");
-  
-  }
-
+}
 
 
 
@@ -222,16 +224,21 @@ oneMonthAgo.setMonth(now.getMonth() - 1);
   const nb_all = scores.filter((d) => d.name == "Number One").length;
   const nb_year = scores_year.filter((d) => d.name == "Number One").length;
 
+
+
+
+
   // Stats
   players = players.map((d) => {
+
+
+
     const data = scores.filter((e) => e.name == d.name);
     const data_year = scores_year.filter((e) => e.name == d.name);
     let data_last =   data_year.slice().sort((a, b) => d3.ascending(a.timestamp, b.timestamp)).slice(-last);
-
-    console.log(data_last)
     data_last = data_last.at(-1).timestamp >= oneMonthAgo ? data_last : [];
 
-
+ //console.log([d.name, data.sort((a, b) => a.id - b.id)])
 
     // Win
  const playerName = d.name;
@@ -526,9 +533,11 @@ const win_last =  win( playerName, data_last, scores)
   function getDartboard(playerName) {
   let data = [];
   if (mode.value === 'Last10') {
+
     data = last(rawdata.value)
       .filter(d => d.name === playerName)
       .map(d => JSON.parse(d.hits));
+      console.log(data)
   } else if (mode.value === 'Saison') {
     data = season(rawdata.value)
       .filter(d => d.name === playerName)

@@ -161,6 +161,7 @@ export function convertToTableString(data) {
     // Ligne avec les 10 scores
     if (player.scores && player.scores.length) {
       const scores = player.scores.sort().join(", ");
+
       html += `<tr><td colspan="2" style="font-size: 0.75em; color: #666;">${scores}</td></tr>`;
     }
   });

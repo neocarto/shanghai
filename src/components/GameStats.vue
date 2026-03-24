@@ -44,6 +44,10 @@ import { drawDartboard } from '../helpers/dartboard.js';
 
 const props = defineProps(['sortedPlayers', 'humanPlayersSorted', 'robotName', 'stats','role', 'site']);
 
+
+
+
+
 // Sauvegarde des scores
 async function saveScore() {
   const timestamp = Date.now();
