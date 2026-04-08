@@ -28,7 +28,7 @@ export const predefinedPlayersCondorcet = [
   {
     id: 1001,
     name: "Hugues",
-    avatar: undefined,
+    avatar: import.meta.env.BASE_URL + "img/glucks.jpg",
   },
   {
     id: 1002,
