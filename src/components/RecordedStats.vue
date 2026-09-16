@@ -4,17 +4,17 @@
     <h1><ins>Classement glissant</ins></h1>
     <p>Sur les 10 dernières parties<br><small><i>(au moins une partie depuis un mois)</i></small></p>
 
-  <div v-if="stats.length == 0">
+  <div v-if="stats.length < 10">
     <h1>Début de saison, repassez plus tard !</h1>
   </div>
 
   <div v-if="stats.length > 0">
       <div class="podium" v-if="stats.length >= 3" style="position: relative; display: inline-block;">
         <img src="/img/podium.webp" alt="Podium" class="podium-image" />
-        <div class="podium-text text-1">{{ stats[0].name }}<span style="font-size: 0.5rem;"> ({{ stats[0].mean_last }})</span></div>
-        <div class="podium-text text-2">{{ stats[1].name }}<span style="font-size: 0.5rem;"> ({{ stats[1].mean_last }})</span></div>
-        <div class="podium-text text-3">{{ stats[2].name }}<span style="font-size: 0.5rem;"> ({{ stats[2].mean_last }})</span></div>
-        <div class="podium-text text-4">Chocolat : {{ stats[3].name }} ({{ stats[3].mean_last }})</div>
+        <div class="podium-text text-1">{{ stats[0]?.name }}<span style="font-size: 0.5rem;"> ({{ stats[0]?.mean_last }})</span></div>
+        <div class="podium-text text-2">{{ stats[1]?.name }}<span style="font-size: 0.5rem;"> ({{ stats[1]?.mean_last }})</span></div>
+        <div class="podium-text text-3">{{ stats[2]?.name }}<span style="font-size: 0.5rem;"> ({{ stats[2]?.mean_last }})</span></div>
+        <div class="podium-text text-4">Chocolat : {{ stats[3]?.name }} ({{ stats[3]?.mean_last }})</div>
 
       </div>
 >  <div align = "center">    <div class="player-card " v-html="convertToTableString2(stats)"></div></div>
@@ -212,10 +212,12 @@ oneMonthAgo.setMonth(now.getMonth() - 1);
 
 
 
-  // Players
-  let players = [...new Set(scores.map((d) => d.name))].map((name) => ({
+
+
+  let players = [...new Set(season(scores).map((d) => d.name))].map((name) => ({
     name
   }));
+
 
   // Scores if the year (Between September 1 and July 31)
   const intervall = getTimestamps();
@@ -229,19 +231,16 @@ oneMonthAgo.setMonth(now.getMonth() - 1);
 
 
 
-
-
   // Stats
+
   players = players.map((d) => {
+   const data = scores.filter((e) => e.name == d.name);
+     const data_year = scores_year.filter((e) => e.name == d.name);
+
+     let data_last = data_year.slice().sort((a, b) => d3.ascending(a.timestamp, b.timestamp)).slice(-last);
+      data_last = data_last.at(-1).timestamp >= oneMonthAgo ? data_last : [];
 
 
-
-    const data = scores.filter((e) => e.name == d.name);
-    const data_year = scores_year.filter((e) => e.name == d.name);
-    let data_last =   data_year.slice().sort((a, b) => d3.ascending(a.timestamp, b.timestamp)).slice(-last);
-    data_last = data_last.at(-1).timestamp >= oneMonthAgo ? data_last : [];
-
- //console.log([d.name, data.sort((a, b) => a.id - b.id)])
 
     // Win
  const playerName = d.name;

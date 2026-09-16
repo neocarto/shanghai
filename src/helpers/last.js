@@ -6,6 +6,7 @@ export function last(scores, nb = 10) {
   const now = new Date();
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(now.getMonth() - 1);
+
   //return oneMonthAgo;
 
   let result = scores
