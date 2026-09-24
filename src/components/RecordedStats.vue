@@ -4,7 +4,9 @@
     <h1><ins>Classement glissant</ins></h1>
     <p>Sur les 10 dernières parties<br><small><i>(au moins une partie depuis un mois)</i></small></p>
 
-  <div v-if="stats.length < 10">
+
+
+  <div v-if="stats.length <= 1">
     <h1>Début de saison, repassez plus tard !</h1>
   </div>
 
@@ -151,9 +153,14 @@ import { last } from '../helpers/last.js';
 
 const stats = ref([]);
 const mode = ref('Last10');
-  const numberOne = ref([]);
-  const rank = ref([]);
-  const rawdata = ref([]);
+const numberOne = ref([]);
+const rank = ref([]);
+const rawdata = ref([]);
+
+
+
+
+
 
 
 async function fetchScores() {
